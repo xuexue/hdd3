@@ -93,4 +93,16 @@ function setupNav(height, width, padding, mainDiv) {
         .attr("r", 13)
         .style("fill", "lightblue")
 
+  selector.move = function () {
+    selector.attr("cx", d3.event.x-padding)
+            .attr("cy", d3.event.y-padding)
+
+  }
+  selector.call(function() {
+    drag = d3.behavior.drag()
+      .on("dragstart", function() { selector.style("fill", "darkblue") })
+      .on("dragend", function() { selector.style("fill", "lightblue") })
+      .on("drag", this.move)
+    this.call(drag);
+  });
 }
