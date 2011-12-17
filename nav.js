@@ -83,7 +83,6 @@ function setupNav(height, width, padding, mainDiv) {
         .text(function(d) { return d.name })
         .attr("text-anchor", "middle")
 
-  /*
   var selector = nav.selectAll("selectornode")
         .data([1])
       .enter().append("circle")
@@ -91,8 +90,7 @@ function setupNav(height, width, padding, mainDiv) {
         .attr("transform", "translate("+padding+","+padding+")")
         .attr("cx", scale(1, width))
         .attr("cy", scale(0, height))
-        .attr("r", 15)
-        .style("fill", "#FFFFFF")
-  */
+        .attr("r", 13)
+        .style("fill", "lightblue")
 
 }
