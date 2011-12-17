@@ -31,6 +31,13 @@ function setupParallel(height, width, padding, mainDiv) {
           d3.select(this).call(axes.scale(scale[d]).orient("left"));
         });
 
+    parallel.selectAll("textlabel")
+        .data(data.traits)
+        .enter().append("text")
+        .attr("x", function(d, i) { return eachWidth*i + padding})
+        .attr("y", height + padding + 10)
+        .attr("text-anchor", "middle")
+        .text(function(d) { return d; })
 
      // lines
      var lines = parallel.selectAll("g.line")
