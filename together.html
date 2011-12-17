@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Prototyping Scatter Plot</title>
+    <script type="text/javascript" src="lib/d3.js"></script>
+    <script type="text/javascript" src="randdata.js"></script>
+    <script type="text/javascript" src="scatter.js"></script>
+    <script type="text/javascript" src="parallel.js"></script>
+    <style type="text/css">
+      #leftPanel {
+        float:left
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id="leftPanel">
+      <div id="parallel">
+        <!-- for the parallel coord plot -->
+      </div>
+      <div id="navgraph">
+        <!-- for navigation -->
+      </div>
+    </div>
+
+    <div id="rightPanel">
+      <!-- for the scatter plot -->
+    </div>
+
+    <script type="text/javascript">
+      plotScatter = setupScatter(450, 450, 20, "#rightPanel");
+      plotScatter("x","y");
+
+      setupParallel(200,300,20, "#parallel");
+    </script>
+
+  </body>
+</html>
+
