@@ -85,7 +85,7 @@ function setupNav(height, width, padding, mainDiv) {
   }
 
   // position the non-moving elements: nodes edges and labels
-  edges = nav.selectAll("line.link")
+  var edges = nav.selectAll("line.link")
         .data(graph.edges)
       .enter().append("line")
         .attr("class", "link")
@@ -97,7 +97,7 @@ function setupNav(height, width, padding, mainDiv) {
         .style("stroke-width", 2)
         .style("stroke", colour.get)
 
-  nodes = nav.selectAll("circle.node")
+  var nodes = nav.selectAll("circle.node")
         .data(graph.nodes)
       .enter().append("circle")
         .attr("class", "node")
@@ -128,7 +128,6 @@ function setupNav(height, width, padding, mainDiv) {
         .attr("r", 13)
 
   // active nodes & edges
-  selector.selected = graph.nodes[0]
 
   selector.activeEdges = function() {
     if (selector.selected) {
@@ -144,7 +143,8 @@ function setupNav(height, width, padding, mainDiv) {
   selector.activeNodes = function () {
     var nodes = []
     var edges = selector.activeEdges()
-    // nodes aren't too bad
+    selector.selected.active = true
+
     for (var i=0; i<edges.length; i++) {
       edge = edges[i]
       if (edge.source == selector.selected) {
@@ -158,13 +158,36 @@ function setupNav(height, width, padding, mainDiv) {
     return nodes;
   }
 
-  selector.activeEdges()
-  selector.activeNodes()
-  nav.selectAll("line.link").style("stroke", colour.get)
-  nav.selectAll("circle.node").style("fill", colour.get)
-  selector.style("fill", colour.selector)
+  // call this to update active nodes & edgs
+  selector.select = function(node, first) {
+    if (!node.active && !first) {
+      return
+    }
 
+    current = selector.selected
 
+    graph.reset()
+    selector.selected = node
+    selector.activeEdges()
+    selector.activeNodes()
+
+    selector.transition()
+            .duration(1000)
+            .attr("cx", scale(node.x, width))
+            .attr("cy", scale(node.y, height))
+
+    plotScatter(node.traits[0], node.traits[1])
+
+    nav.selectAll("line.link").style("stroke", colour.get)
+    nav.selectAll("circle.node").style("fill", colour.get)
+    selector.style("fill", colour.selector)
+  }
+  selector.select(graph.nodes[0], true)
+
+  nodes.on("click", function(d,i) { selector.select(d) })
+
+  // MOVEMENT RELATED
+  /*
   selector.move = function () {
     selector.attr("cx", d3.event.x-padding)
             .attr("cy", d3.event.y-padding)
@@ -177,4 +200,5 @@ function setupNav(height, width, padding, mainDiv) {
       .on("drag", this.move)
     this.call(drag);
   });
+  */
 }
