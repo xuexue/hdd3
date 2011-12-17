@@ -6,9 +6,13 @@
     <script type="text/javascript" src="randdata.js"></script>
     <script type="text/javascript" src="scatter.js"></script>
     <script type="text/javascript" src="parallel.js"></script>
+    <script type="text/javascript" src="nav.js"></script>
     <style type="text/css">
       #leftPanel {
         float:left
+      }
+      #navgraph {
+        padding-left:10px;
       }
     </style>
   </head>
@@ -32,6 +36,8 @@
       plotScatter("x","y");
 
       setupParallel(200,300,20, "#parallel");
+
+      setupNav(200,200,40, "#navgraph");
     </script>
 
   </body>
