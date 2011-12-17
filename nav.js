@@ -176,7 +176,7 @@ function setupNav(height, width, padding, mainDiv) {
             .attr("cx", scale(node.x, width))
             .attr("cy", scale(node.y, height))
 
-    plotScatter(node.traits[0], node.traits[1])
+    scatter.plotScatter(node.traits[0], node.traits[1])
 
     nav.selectAll("line.link").style("stroke", colour.get)
     nav.selectAll("circle.node").style("fill", colour.get)
