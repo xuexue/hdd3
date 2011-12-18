@@ -6,6 +6,10 @@ Array.prototype.intersects = function(search){
   return false;
 } 
 
+function distance(x1, y1, x2, y2) {
+  return Math.sqrt(Math.pow(x1-x2, 2) + Math.pow(y1-y2, 2))
+}
+
 // generate the navigation graph; nodes are pairs of traits, and an edge
 // between two nodes exist if they share a common trait
 function generateGraph(width, height) {
@@ -69,6 +73,16 @@ function setupNav(height, width, padding, mainDiv) {
     if (!length) length = shift 
     return a*length/2 + shift/2;
   }
+  function scaleHeight(d) { return scale(d.y, height) }
+  function scaleWidth(d) { return scale(d.x, width) }
+
+  // @TODO: should be able to do this with prototypes
+  for (var i=0; i<graph.edges.length; i++) {
+    edge = graph.edges[i]
+    edge.length = distance(scaleWidth(edge.source), scaleHeight(edge.source),
+                           scaleWidth(edge.target), scaleHeight(edge.target))
+  }
+
 
   // position the non-moving elements: nodes edges and labels
   var edges = nav.selectAll("line.link")
@@ -88,8 +102,8 @@ function setupNav(height, width, padding, mainDiv) {
       .enter().append("circle")
         .attr("class", "node")
         .attr("transform", "translate("+padding+","+padding+")")
-        .attr("cx", function(d) { return scale(d.x, width); })
-        .attr("cy", function(d) { return scale(d.y, height); })
+        .attr("cx", scaleWidth)
+        .attr("cy", scaleHeight)
         .attr("r", 15)
         .style("fill", colour.nav)
 
@@ -113,86 +127,103 @@ function setupNav(height, width, padding, mainDiv) {
         .attr("cy", scale(0, height))
         .attr("r", 13)
 
-  // active nodes & edges
-
-  selector.activeEdges = function() {
-    if (selector.selected) {
-      var edges = selector.selected.edges
-      for (var i=0; i<edges.length; i++) {
-        edges[i].active = true
-      }
-      return edges;
-    }
-    return []
-  }
-
-  selector.activeNodes = function () {
-    var nodes = []
-    var edges = selector.activeEdges()
-    selector.selected.active = true
-
-    for (var i=0; i<edges.length; i++) {
-      edge = edges[i]
-      if (edge.source == selector.selected) {
-        node = edge.target;
-      } else {
-        node = edge.source;
-      }
-      node.active = true
-      nodes.push(node);
-    }
-    return nodes;
-  }
+  selector.selected = null
+  selector.selectedEdge = null
 
   // call this to update active nodes & edgs
-  selector.select = function(node, first) {
+  selector.selectNode = function(node, first) {
     if (!node.active && !first) {
       return
     }
-
-    current = selector.selected
-
-    graph.reset()
+    var current = selector.selected
     selector.selected = node
-    selector.activeEdges()
-    selector.activeNodes()
+    // reset active elements 
+    graph.reset()                        // clear everything
+    var edges = node.edges
+    for (var i=0; i<edges.length; i++) { // edges
+      edges[i].active = true
+    }
+    for (var i=0; i<edges.length; i++) { // nodes
+      edge = edges[i]
+      edge.target.active = true;
+      edge.source.active = true;
+    }
+    // do some math
+    var transition = 0.5
+    if (current) {
+      var edgeLength = 1
+      if (selector.selectedEdge) {
+        edgeLength = selector.selectedEdge.length
+      } else {
+        edgeLength = distance(scaleWidth(current), scaleHeight(current),
+                             scaleWidth(node), scaleHeight(node))
+      }
+      var travelLength = distance(selector.attr("cx"), selector.attr("cy"),
+                              scaleWidth(node), scaleHeight(node))
+      transition = travelLength/edgeLength
+    }
+
+    // scatter plot
+    scatter.plot(node.traits[0], node.traits[1], transition)
+    // change the colour of the lines & circles
+    nav.selectAll("line.link").style("stroke", colour.nav)
+    nav.selectAll("circle.node").style("fill", colour.nav)
+    selector.style("fill", colour.selector)
 
     selector.transition()
-            .duration(1000)
-            .attr("cx", scale(node.x, width))
-            .attr("cy", scale(node.y, height))
+            .ease("linear")
+            .duration(1000 * transition)
+            .attr("cx", scaleWidth(node))
+            .attr("cy", scaleHeight(node))
+    selector.selectedEdge = null
+  }
 
-    scatter.plot(node.traits[0], node.traits[1])
+  // initial selection
+  selector.selectNode(graph.nodes[0], true)
+
+  nodes.on("click", function(d,i) { selector.selectNode(d) });
+
+  selector.selectEdge = function(edge, x, y) {
+    if (!edge.active) {
+      return
+    }
+    // reset active elements
+    graph.reset()
+    selector.selectedEdge = edge
+    edge.active = true
+    edge.target.active = true;
+    edge.source.active = true;
+    // do some math
+    currentX = selector.attr("cx")
+    currentY = selector.attr("cy")
+
+    var dist, xtrait, ytrait;
+    travelLength = distance(currentX, currentY, x, y)
+    if (selector.selected == edge.target) {
+      dist = distance(x, y, scaleWidth(edge.source), scaleHeight(edge.source))
+      xtrait = edge.source.traits[0]
+      ytrait = edge.source.traits[1]
+    } else {
+      dist = distance(x, y, scaleWidth(edge.target), scaleHeight(edge.target))
+      xtrait = edge.target.traits[0]
+      ytrait = edge.target.traits[1]
+    }
+    scatter.interpolate(xtrait, ytrait, dist/edge.length, travelLength/edge.length)
 
     nav.selectAll("line.link").style("stroke", colour.nav)
     nav.selectAll("circle.node").style("fill", colour.nav)
     selector.style("fill", colour.selector)
+    selector.transition()
+            .ease("linear")
+            .duration(1000 * travelLength/edge.length)
+            .attr("cx", x)
+            .attr("cy", y)
   }
-  selector.select(graph.nodes[0], true)
-
-  nodes.on("click", function(d,i) { selector.select(d) });
 
   edges.on("mousedown", function(d,i) {
     if (!d.active) {
       return
     }
-    selector.attr("cx", d3.event.offsetX - padding)
-            .attr("cy", d3.event.offsetY - padding)
+    selector.selectEdge(d, d3.event.offsetX-padding, d3.event.offsetY-padding)
   })
-
-  // MOVEMENT RELATED
-  /*
-  selector.move = function () {
-    selector.attr("cx", d3.event.x-padding)
-            .attr("cy", d3.event.y-padding)
-  }
-
-  selector.call(function() {
-    drag = d3.behavior.drag()
-      .on("dragstart", function() { selector.style("fill", colour.drag) })
-      .on("dragend", function() { selector.style("fill", colour.selector) })
-      .on("drag", this.move)
-    this.call(drag);
-  });
-  */
 }

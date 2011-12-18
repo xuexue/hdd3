@@ -22,7 +22,7 @@ scatter.setup = function (height, width, padding, mainDiv)  {
       .style("fill", function(d) { return colour.point(d.category) })
 }
 
-scatter.plot = function(xtrait, ytrait) {
+scatter.plot = function(xtrait, ytrait, transition) {
   if (!this.xtrait || this.xtrait == xtrait || this.ytrait == ytrait) {
     this.xtrait = xtrait
     this.ytrait = ytrait
@@ -32,7 +32,8 @@ scatter.plot = function(xtrait, ytrait) {
   }
 
   this.dots.transition()
-      .duration(1000)
+      .ease("linear")
+      .duration(1000*transition)
       .attr("cx", function(d) {
         return scatter.xScales.scaleGet[scatter.xtrait](d);
       })
@@ -41,3 +42,23 @@ scatter.plot = function(xtrait, ytrait) {
       })
 }
 
+scatter.interpolate = function(xtrait, ytrait, ratio, transition) {
+  if (this.xtrait && (this.xtrait != xtrait && this.ytrait != ytrait)) {
+    var tmp = ytrait
+    ytrait = xtrait
+    xtrait = tmp
+  }
+
+  this.dots.transition()
+      .ease("linear")
+      .duration(1000*transition)
+      .attr("cx", function(d) {
+        return (ratio*scatter.xScales.scaleGet[scatter.xtrait](d) + 
+                (1-ratio)*scatter.xScales.scaleGet[xtrait](d)) ;
+      })
+      .attr("cy", function(d) {
+        return (ratio*scatter.yScales.scaleGet[scatter.ytrait](d) + 
+                (1-ratio)*scatter.yScales.scaleGet[ytrait](d)) ;
+      })
+
+}
