@@ -62,25 +62,3 @@ parallel.setup = function(height, width, padding, mainDiv) {
       }
     }
 }
-    /* points
-    var cell = parallel.selectAll("g.cell")
-        .data(data.traits)
-        .enter().append("g")
-        .attr("class", "cell")
-        .attr("transform", function(d, i) {
-         return "translate(" + (i*eachWidth+padding)+ "," + padding + ")";
-        })
-        .each(plotPoints);
-
-    function plotPoints(trait) {
-      var cell = d3.select(this);
-      cell.selectAll("circle")
-        .data(data.values)
-        .enter().append("circle")
-        .attr("cx", 0)
-        .attr("cy", scaleGet[trait])
-        .attr("r", 3)
-        .attr("fill", favColour)
-     } */
-
-

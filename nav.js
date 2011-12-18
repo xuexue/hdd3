@@ -6,6 +6,7 @@ Array.prototype.intersects = function(search){
   return false;
 } 
 
+// helper function to compute the distance between two points in pixel
 function distance(x1, y1, x2, y2) {
   return Math.sqrt(Math.pow(x1-x2, 2) + Math.pow(y1-y2, 2))
 }
@@ -225,5 +226,5 @@ function setupNav(height, width, padding, mainDiv) {
       return
     }
     selector.selectEdge(d, d3.event.offsetX-padding, d3.event.offsetY-padding)
-  })
+  });
 }
