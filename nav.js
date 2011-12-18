@@ -200,8 +200,15 @@ function setupNav(height, width, padding, mainDiv) {
   // movement to the middle of an edge (requires interpolation)
   edges.on("mousedown", function(edge) {
     if (edge.active) {
-      var x = d3.event.offsetX-padding,
-          y = d3.event.offsetY-padding
+      console.log(d3.event)
+      var x, y
+      if (d3.event.offsetX) {
+        x = d3.event.offsetX-padding
+        y = d3.event.offsetY-padding
+      } else {
+        x = d3.event.layerX-padding-7
+        y = d3.event.layerY-padding-10
+      }
       selector.selectedEdge = edge
       // reset active elements
       graph.reset()
