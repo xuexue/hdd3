@@ -89,6 +89,12 @@ function setupNav(height, width, padding, mainDiv) {
     edge.source.active = true;
   }
 
+  // activate the first elt & plot the scatter plot
+  var initialNode = graph.nodes[0]
+  for (var i = 0; i< initialNode.edges.length; i++) {
+    activateEdge(initialNode.edges[i])
+  }
+  scatter.plot(initialNode.traits[0], initialNode.traits[1], 0.5)
 
   // position the non-moving elements: nodes edges and labels
   var edges = nav.selectAll("line.link")
@@ -96,12 +102,17 @@ function setupNav(height, width, padding, mainDiv) {
       .enter().append("line")
         .attr("class", "link")
         .attr("transform", "translate("+padding+","+padding+")")
-        .attr("x1", function(d) { return scale(d.source.x, width); })
-        .attr("y1", function(d) { return scale(d.source.y, height); })
-        .attr("x2", function(d) { return scale(d.target.x, width); })
-        .attr("y2", function(d) { return scale(d.target.y, height); })
+        .attr("x1", function(d) { return scaleWidth(d.source); })
+        .attr("y1", function(d) { return scaleHeight(d.source); })
+        .attr("x2", function(d) { return scaleWidth(d.target); })
+        .attr("y2", function(d) { return scaleHeight(d.target); })
         .style("stroke-width", 5)
         .style("stroke", colour.nav)
+        .attr("class", function(d) {
+          if (d.active) {
+            return "link active";
+          } return "link"
+        });
 
   var nodes = nav.selectAll("circle.node")
         .data(graph.nodes)
@@ -112,6 +123,11 @@ function setupNav(height, width, padding, mainDiv) {
         .attr("cy", scaleHeight)
         .attr("r", 15)
         .style("fill", colour.nav)
+        .attr("class", function(d) {
+          if (d.active) { 
+            return "node active";
+          } return "node"
+        });
 
   var labels = nav.selectAll("labeltext")
         .data(graph.nodes)
@@ -139,9 +155,6 @@ function setupNav(height, width, padding, mainDiv) {
            return "node active";
          } return "node"
        })
-
-    selector.style("fill", colour.selector)
-
     selector.transition()
             .ease("linear")
             .duration(1000 * transition)
@@ -153,19 +166,19 @@ function setupNav(height, width, padding, mainDiv) {
   selector = nav.selectAll("selectornode")
         .data([1])
       .enter().append("circle")
-        .attr("class", "node")
+        .attr("class", "selector")
         .attr("transform", "translate("+padding+","+padding+")")
         .attr("cx", scale(1, width))
         .attr("cy", scale(0, height))
         .attr("r", 13)
+        .style("fill", colour.selector)
 
-  selector.selected = null
+  selector.selected = initialNode
   selector.selectedEdge = null
 
-  // call this to update active nodes & edgs
-  selector.selectNode = function(node) {
+  // this is called when moving to a new node
+  nodes.on("click", function(node) { 
     if (node.active) {
-      var current = selector.selected
       selector.selected = node
       // reset active elements 
       graph.reset()
@@ -184,42 +197,33 @@ function setupNav(height, width, padding, mainDiv) {
       replot(scaleWidth(node), scaleHeight(node), transition)
       selector.selectedEdge = null
     }
-  }
+  });
 
-  // initial selection
-  graph.nodes[0].active = true
-  selector.selectNode(graph.nodes[0])
-
-  nodes.on("click", function(d,i) { selector.selectNode(d) });
-
-  selector.selectEdge = function(edge, x, y) {
+  // this is called when moving to the middle of an edge
+  edges.on("mousedown", function(edge) {
     if (edge.active) {
+      var x = d3.event.offsetX-padding,
+          y = d3.event.offsetY-padding
       selector.selectedEdge = edge
       // reset active elements
       graph.reset()
       activateEdge(edge)
-      // figure out how much we need to move
+      // calculate the amount of movement/transition to be made
       transition = (distance(selector.attr("cx"),selector.attr("cy"), x, y)
                       / edge.length)
       // calculate direction that the scatter plot is rotating towards
+      // and other useful data
       var rotatingTo = edge.target
       if (selector.selected == edge.target) {
         rotatingTo = edge.source
       }
-      // calculate the movement distances
-      var dist = distance(x, y, scaleWidth(rotatingTo), scaleHeight(rotatingTo))
-          xtrait = rotatingTo.traits[0]
-          ytrait = rotatingTo.traits[1]
-      // plot!
-      scatter.interpolate(xtrait, ytrait, dist/edge.length, transition)
+      var interpolation = (distance(x, y, scaleWidth(rotatingTo),
+                                          scaleHeight(rotatingTo))
+                            / edge.length)
+      // plot!!
+      scatter.interpolate(rotatingTo.traits[0], rotatingTo.traits[1],
+                          interpolation, transition)
       replot(x, y, transition)
     }
-  }
-
-  edges.on("mousedown", function(d,i) {
-    if (!d.active) {
-      return
-    }
-    selector.selectEdge(d, d3.event.offsetX-padding, d3.event.offsetY-padding)
   });
 }

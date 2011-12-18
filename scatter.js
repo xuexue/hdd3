@@ -60,5 +60,4 @@ scatter.interpolate = function(xtrait, ytrait, ratio, transition) {
         return (ratio*scatter.yScales.scaleGet[scatter.ytrait](d) + 
                 (1-ratio)*scatter.yScales.scaleGet[ytrait](d)) ;
       })
-
 }
