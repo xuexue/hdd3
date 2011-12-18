@@ -2,9 +2,9 @@ parallel = {}
 
 parallel.setup = function(height, width, padding, mainDiv) {
   // scales and scaled-getters
-  var o = getScales([height, 0]);
-  var scale = o.scale,
-      scaleGet = o.scaleGet;
+  this.o = getScales([height, 0]);
+  var scale = this.o.scale,
+      scaleGet = this.o.scaleGet;
 
   // chart
   var eachWidth = width / (data.traits.length - 1)
@@ -15,26 +15,22 @@ parallel.setup = function(height, width, padding, mainDiv) {
       .attr("height", height + 2*padding);
 
   // lines
-  this.lines = this.chart.selectAll("g.line")
-      .data(data.values)
-      .enter().append("svg:g")
-      .attr("transform", "translate(0,"+padding+")")
-      .each(function (point) {
-        for (var i = 0; i < data.traits.length - 1; i++) {
-          var lines = d3.select(this)
-          current = data.traits[i]
-          next = data.traits[i+1]
+  for (var i=1; i< data.traits.length; i++) {
+    var prev = data.traits[i-1],
+        current = data.traits[i]
+    parallel.chart.selectAll("linechart")
+        .data(data.values)
+         .enter().append("svg:line")
+        .attr("transform", "translate(0,"+padding+")")
+         .attr("class", "path")
+         .attr("x1", padding + (i-1)*eachWidth)
+         .attr("y1", function(d) { return parallel.o.scaleGet[prev](d) })
+         .attr("x2", padding + i*eachWidth)
+         .attr("y2", function(d) { return parallel.o.scaleGet[current](d) })
+         .attr("width", 1)
+         .style("stroke", colour.point)
+  }
 
-          lines.append("svg:line")
-              .attr("class", "path")
-              .attr("x1", padding + i*eachWidth)
-              .attr("y1", scaleGet[current](point))
-              .attr("x2", padding + (i+1)*eachWidth)
-              .attr("y2", scaleGet[next](point))
-              .attr("width", 1)
-              .attr("stroke", colour.point)
-        }
-      });
   // axes
   var axes = d3.svg.axis()
       .ticks(4)
@@ -44,10 +40,9 @@ parallel.setup = function(height, width, padding, mainDiv) {
       .data(data.traits)
       .enter().append("svg:g")
       .attr("class", "y axis")
-      .attr("transform",
-            function(d, i) {
-              return "translate("+((i*eachWidth)+padding)+","+padding+")"
-            })
+      .attr("transform", function(d, i) {
+        return "translate("+((i*eachWidth)+padding)+","+padding+")"
+      })
       .each(function(d){ d3.select(this).call(axes.scale(scale[d])); })
     .append("svg:text")
       .attr("text-anchor", "middle")
@@ -55,4 +50,7 @@ parallel.setup = function(height, width, padding, mainDiv) {
       .text(function(d) { return d; })
 }
 
-
+parallel.replot = function() {
+  parallel.chart.selectAll("line.path")
+          .style("stroke", colour.point)
+}

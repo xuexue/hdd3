@@ -50,12 +50,14 @@ scatter.setup = function (height, width, padding, mainDiv)  {
       }
     }); 
     scatter.dots.style("fill", colour.point)
+    parallel.replot();
   }
   // If the brush is empty, select all circles.
   function brushend(p) {
     if (!brush.hasSelected)  {
       activatePoints()
       scatter.dots.style("fill", colour.point)
+      parallel.replot();
     } else {
       scatter.chart.selectAll("rect.extent").style("fill-opacity", 0)
     }
