@@ -11,6 +11,7 @@
     <script type="text/javascript" src="scatter.js"></script>
     <script type="text/javascript" src="parallel.js"></script>
     <script type="text/javascript" src="nav.js"></script>
+    <script type="text/javascript" src="navgraph.js"></script>
     <link rel="stylesheet" href="menu.css" type="text/css" />
     <style type="text/css">
       #leftPanel { float:left }
@@ -58,20 +59,7 @@
     </div>
 
     <script type="text/javascript">
-      scatter.setup(550, 550, 20, "#rightPanel");
-      parallel.setup(200,300,20, "#parallel");
-      setupNav(200,200,80, "#navgraph");
-
-      if (data.category) {
-        legend = d3.select("#legend")
-        legend.text("Categories: ")
-        legend.selectAll("legend")
-          .data(data.category)
-          .enter().append("span")
-          .attr("class", "legend")
-          .style("color", function(d) { return colour.scheme(d) })
-          .text(function(d) { return d+" " })
-      }
+      navgraph(data);
     </script>
 
   </body>
