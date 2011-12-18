@@ -13,7 +13,7 @@
         float:left
       }
       #navgraph {
-        padding-left:30px;
+        padding-left:20px;
       }
     </style>
   </head>
@@ -33,12 +33,12 @@
     </div>
 
     <script type="text/javascript">
-      scatter.setupScatter(450, 450, 20, "#rightPanel");
-      scatter.plotScatter("x","y");
+      scatter.setup(450, 450, 20, "#rightPanel");
+      scatter.plot("x","y");
 
-      setupParallel(200,300,20, "#parallel");
+      parallel.setup(200,300,20, "#parallel");
 
-      setupNav(200,200,40, "#navgraph");
+      setupNav(200,200,60, "#navgraph");
     </script>
 
   </body>

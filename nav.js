@@ -6,20 +6,6 @@ Array.prototype.intersects = function(search){
   return false;
 } 
 
-// colour ... 
-var colour = {
-  "main":"steelblue",
-  "selector": "lightgreen",
-  "drag" : "green",
-  "active": "blue",
-}
-colour.get = function(d) {
-  if (d.active) {
-    return colour.active
-  }
-  return colour.main
-}
-
 // generate the navigation graph; nodes are pairs of traits, and an edge
 // between two nodes exist if they share a common trait
 function generateGraph(width, height) {
@@ -95,7 +81,7 @@ function setupNav(height, width, padding, mainDiv) {
         .attr("x2", function(d) { return scale(d.target.x, width); })
         .attr("y2", function(d) { return scale(d.target.y, height); })
         .style("stroke-width", 2)
-        .style("stroke", colour.get)
+        .style("stroke", colour.nav)
 
   var nodes = nav.selectAll("circle.node")
         .data(graph.nodes)
@@ -105,7 +91,7 @@ function setupNav(height, width, padding, mainDiv) {
         .attr("cx", function(d) { return scale(d.x, width); })
         .attr("cy", function(d) { return scale(d.y, height); })
         .attr("r", 15)
-        .style("fill", colour.get)
+        .style("fill", colour.nav)
 
   var labels = nav.selectAll("labeltext")
         .data(graph.nodes)
@@ -176,10 +162,10 @@ function setupNav(height, width, padding, mainDiv) {
             .attr("cx", scale(node.x, width))
             .attr("cy", scale(node.y, height))
 
-    scatter.plotScatter(node.traits[0], node.traits[1])
+    scatter.plot(node.traits[0], node.traits[1])
 
-    nav.selectAll("line.link").style("stroke", colour.get)
-    nav.selectAll("circle.node").style("fill", colour.get)
+    nav.selectAll("line.link").style("stroke", colour.nav)
+    nav.selectAll("circle.node").style("fill", colour.nav)
     selector.style("fill", colour.selector)
   }
   selector.select(graph.nodes[0], true)

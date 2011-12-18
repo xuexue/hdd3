@@ -1,6 +1,6 @@
 scatter = {}
 
-scatter.setupScatter = function (height, width, padding, mainDiv)  {
+scatter.setup = function (height, width, padding, mainDiv)  {
   // scales and scaled-getters
   this.xScales = getScales([0, width])
   this.yScales = getScales([height, 0])
@@ -19,10 +19,10 @@ scatter.setupScatter = function (height, width, padding, mainDiv)  {
       .attr("cx", width/2)
       .attr("cy", height/2)
       .attr("r", 3)
-      .style("fill", "steelblue")
+      .style("fill", function(d) { return colour.point(d.category) })
 }
 
-scatter.plotScatter = function(xtrait, ytrait) {
+scatter.plot = function(xtrait, ytrait) {
   if (!this.xtrait || this.xtrait == xtrait || this.ytrait == ytrait) {
     this.xtrait = xtrait
     this.ytrait = ytrait

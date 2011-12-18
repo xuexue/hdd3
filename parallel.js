@@ -1,6 +1,6 @@
-function setupParallel(height, width, padding, mainDiv) {
-    var favColour = "steelblue"
+parallel = {}
 
+parallel.setup = function(height, width, padding, mainDiv) {
     // scales and scaled-getters
     var o = getScales([height, 0]);
     var scale = o.scale,
@@ -58,7 +58,7 @@ function setupParallel(height, width, padding, mainDiv) {
             .attr("x2", padding + (i+1)*eachWidth)
             .attr("y2", scaleGet[next](point))
             .attr("width", 1)
-            .attr("stroke", favColour)
+            .attr("stroke", function(d) { return colour.point(d.category) })
       }
     }
 }
@@ -82,6 +82,5 @@ function setupParallel(height, width, padding, mainDiv) {
         .attr("r", 3)
         .attr("fill", favColour)
      } */
-
 
 
