@@ -14,31 +14,6 @@ parallel.setup = function(height, width, padding, mainDiv) {
         .attr("width", width + 2*padding)
         .attr("height", height + 2*padding);
 
-    // axes
-    var axes = d3.svg.axis()
-        .ticks(4)
-        .tickSize(1)
-
-    parallel.selectAll("g.axis")
-        .data(data.traits)
-        .enter().append("svg:g")
-        .attr("class", "y axis")
-        .attr("transform",
-              function(d, i) {
-                return "translate("+((i*eachWidth)+padding)+","+padding+")"
-              })
-        .each(function(d){
-          d3.select(this).call(axes.scale(scale[d]).orient("left"));
-        });
-
-    parallel.selectAll("textlabel")
-        .data(data.traits)
-        .enter().append("text")
-        .attr("x", function(d, i) { return eachWidth*i + padding})
-        .attr("y", height + padding + 10)
-        .attr("text-anchor", "middle")
-        .text(function(d) { return d; })
-
      // lines
      var lines = parallel.selectAll("g.line")
          .data(data.values)
@@ -61,4 +36,29 @@ parallel.setup = function(height, width, padding, mainDiv) {
             .attr("stroke", function(d) { return colour.point(d.category) })
       }
     }
+    // axes
+    var axes = d3.svg.axis()
+        .ticks(4)
+        .tickSize(1)
+
+    parallel.selectAll("g.axis")
+        .data(data.traits)
+        .enter().append("svg:g")
+        .attr("class", "y axis")
+        .attr("transform",
+              function(d, i) {
+                return "translate("+((i*eachWidth)+padding)+","+padding+")"
+              })
+        .each(function(d){
+          d3.select(this).call(axes.scale(scale[d]).orient("left"));
+        });
+
+    parallel.selectAll("textlabel")
+        .data(data.traits)
+        .enter().append("text")
+        .attr("x", function(d, i) { return eachWidth*i + padding})
+        .attr("y", height + padding + 17.5)
+        .attr("text-anchor", "middle")
+        .text(function(d) { return d; })
+
 }

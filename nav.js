@@ -77,11 +77,16 @@ function setupNav(height, width, padding, mainDiv) {
   function scaleHeight(d) { return scale(d.y, height) }
   function scaleWidth(d) { return scale(d.x, width) }
 
-  // @TODO: should be able to do this with prototypes
+  // @TODO: should be able to do these with prototypes
   for (var i=0; i<graph.edges.length; i++) {
     edge = graph.edges[i]
     edge.length = distance(scaleWidth(edge.source), scaleHeight(edge.source),
                            scaleWidth(edge.target), scaleHeight(edge.target))
+  }
+  function activateEdge(edge) {
+    edge.active = true;
+    edge.target.active = true;
+    edge.source.active = true;
   }
 
 
@@ -118,6 +123,32 @@ function setupNav(height, width, padding, mainDiv) {
         .text(function(d) { return d.name })
         .attr("text-anchor", "middle")
 
+  // function to replot nodes & edges
+  function replot(selectorX, selectorY, transition) {
+    nav.selectAll("line.link")
+       .style("stroke", colour.nav)
+       .attr("class", function(d) {
+         if (d.active) {
+           return "link active";
+         } return "link"
+       })
+    nav.selectAll("circle.node")
+       .style("fill", colour.nav)
+       .attr("class", function(d) {
+         if (d.active) { 
+           return "node active";
+         } return "node"
+       })
+
+    selector.style("fill", colour.selector)
+
+    selector.transition()
+            .ease("linear")
+            .duration(1000 * transition)
+            .attr("cx", selectorX)
+            .attr("cy", selectorY)
+  }
+
   // position the selector
   selector = nav.selectAll("selectornode")
         .data([1])
@@ -132,93 +163,57 @@ function setupNav(height, width, padding, mainDiv) {
   selector.selectedEdge = null
 
   // call this to update active nodes & edgs
-  selector.selectNode = function(node, first) {
-    if (!node.active && !first) {
-      return
-    }
-    var current = selector.selected
-    selector.selected = node
-    // reset active elements 
-    graph.reset()                        // clear everything
-    var edges = node.edges
-    for (var i=0; i<edges.length; i++) { // edges
-      edges[i].active = true
-    }
-    for (var i=0; i<edges.length; i++) { // nodes
-      edge = edges[i]
-      edge.target.active = true;
-      edge.source.active = true;
-    }
-    // do some math
-    var transition = 0.5
-    if (current) {
-      var edgeLength = 1
-      if (selector.selectedEdge) {
-        edgeLength = selector.selectedEdge.length
-      } else {
-        edgeLength = distance(scaleWidth(current), scaleHeight(current),
-                             scaleWidth(node), scaleHeight(node))
+  selector.selectNode = function(node) {
+    if (node.active) {
+      var current = selector.selected
+      selector.selected = node
+      // reset active elements 
+      graph.reset()
+      for (var i=0; i<node.edges.length; i++) {
+        activateEdge(node.edges[i])
       }
-      var travelLength = distance(selector.attr("cx"), selector.attr("cy"),
-                              scaleWidth(node), scaleHeight(node))
-      transition = travelLength/edgeLength
+      // calculate the amount of movement/transition to be made
+      var transition = 0.5
+      if (selector.selectedEdge) {
+        transition = (distance(selector.attr("cx"), selector.attr("cy"),
+                                scaleWidth(node), scaleHeight(node))
+                      / selector.selectedEdge.length)
+      }
+      // plot!!
+      scatter.plot(node.traits[0], node.traits[1], transition)
+      replot(scaleWidth(node), scaleHeight(node), transition)
+      selector.selectedEdge = null
     }
-
-    // scatter plot
-    scatter.plot(node.traits[0], node.traits[1], transition)
-    // change the colour of the lines & circles
-    nav.selectAll("line.link").style("stroke", colour.nav)
-    nav.selectAll("circle.node").style("fill", colour.nav)
-    selector.style("fill", colour.selector)
-
-    selector.transition()
-            .ease("linear")
-            .duration(1000 * transition)
-            .attr("cx", scaleWidth(node))
-            .attr("cy", scaleHeight(node))
-    selector.selectedEdge = null
   }
 
   // initial selection
-  selector.selectNode(graph.nodes[0], true)
+  graph.nodes[0].active = true
+  selector.selectNode(graph.nodes[0])
 
   nodes.on("click", function(d,i) { selector.selectNode(d) });
 
   selector.selectEdge = function(edge, x, y) {
-    if (!edge.active) {
-      return
+    if (edge.active) {
+      selector.selectedEdge = edge
+      // reset active elements
+      graph.reset()
+      activateEdge(edge)
+      // figure out how much we need to move
+      transition = (distance(selector.attr("cx"),selector.attr("cy"), x, y)
+                      / edge.length)
+      // calculate direction that the scatter plot is rotating towards
+      var rotatingTo = edge.target
+      if (selector.selected == edge.target) {
+        rotatingTo = edge.source
+      }
+      // calculate the movement distances
+      var dist = distance(x, y, scaleWidth(rotatingTo), scaleHeight(rotatingTo))
+          xtrait = rotatingTo.traits[0]
+          ytrait = rotatingTo.traits[1]
+      // plot!
+      scatter.interpolate(xtrait, ytrait, dist/edge.length, transition)
+      replot(x, y, transition)
     }
-    // reset active elements
-    graph.reset()
-    selector.selectedEdge = edge
-    edge.active = true
-    edge.target.active = true;
-    edge.source.active = true;
-    // do some math
-    currentX = selector.attr("cx")
-    currentY = selector.attr("cy")
-
-    var dist, xtrait, ytrait;
-    travelLength = distance(currentX, currentY, x, y)
-    if (selector.selected == edge.target) {
-      dist = distance(x, y, scaleWidth(edge.source), scaleHeight(edge.source))
-      xtrait = edge.source.traits[0]
-      ytrait = edge.source.traits[1]
-    } else {
-      dist = distance(x, y, scaleWidth(edge.target), scaleHeight(edge.target))
-      xtrait = edge.target.traits[0]
-      ytrait = edge.target.traits[1]
-    }
-    scatter.interpolate(xtrait, ytrait, dist/edge.length, travelLength/edge.length)
-
-    nav.selectAll("line.link").style("stroke", colour.nav)
-    nav.selectAll("circle.node").style("fill", colour.nav)
-    selector.style("fill", colour.selector)
-    selector.transition()
-            .ease("linear")
-            .duration(1000 * travelLength/edge.length)
-            .attr("cx", x)
-            .attr("cy", y)
   }
 
   edges.on("mousedown", function(d,i) {
