@@ -98,8 +98,8 @@ function setupNav(height, width, padding, mainDiv) {
       .enter().append("text")
         .attr("class", "text")
         .attr("transform", "translate("+padding+","+(padding+3)+")")
-        .attr("x", function(d) { return scale(d.x, width, width+45)})
-        .attr("y", function(d) { return scale(d.y, height, height+45)})
+        .attr("x", function(d) { return scale(d.x, width, width+85)})
+        .attr("y", function(d) { return scale(d.y, height, height+55)})
         .text(function(d) { return d.name })
         .attr("text-anchor", "middle")
 
