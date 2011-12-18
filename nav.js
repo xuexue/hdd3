@@ -80,7 +80,7 @@ function setupNav(height, width, padding, mainDiv) {
         .attr("y1", function(d) { return scale(d.source.y, height); })
         .attr("x2", function(d) { return scale(d.target.x, width); })
         .attr("y2", function(d) { return scale(d.target.y, height); })
-        .style("stroke-width", 2)
+        .style("stroke-width", 5)
         .style("stroke", colour.nav)
 
   var nodes = nav.selectAll("circle.node")
@@ -117,7 +117,7 @@ function setupNav(height, width, padding, mainDiv) {
 
   selector.activeEdges = function() {
     if (selector.selected) {
-      edges = selector.selected.edges
+      var edges = selector.selected.edges
       for (var i=0; i<edges.length; i++) {
         edges[i].active = true
       }
@@ -170,7 +170,15 @@ function setupNav(height, width, padding, mainDiv) {
   }
   selector.select(graph.nodes[0], true)
 
-  nodes.on("click", function(d,i) { selector.select(d) })
+  nodes.on("click", function(d,i) { selector.select(d) });
+
+  edges.on("mousedown", function(d,i) {
+    if (!d.active) {
+      return
+    }
+    selector.attr("cx", d3.event.offsetX - padding)
+            .attr("cy", d3.event.offsetY - padding)
+  })
 
   // MOVEMENT RELATED
   /*
