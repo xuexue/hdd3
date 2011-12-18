@@ -13,22 +13,20 @@ function distance(x1, y1, x2, y2) {
 
 // generate the navigation graph; nodes are pairs of traits, and an edge
 // between two nodes exist if they share a common trait
-function generateGraph(width, height) {
+function generateGraph() {
   var nodes = [],
       edges = [],
       ntraits = data.traits.length,
       numNodes = ntraits * (ntraits-1) / 2
-
   var k = 0
   for (var i = 0; i < ntraits; i++) {
     for (var j = i+1; j < ntraits; j++) {
       // push the node identifying pairs of coordinates
       var node = {
-        id: k,
         name: data.traits[i]+':'+data.traits[j],
         traits: [data.traits[i], data.traits[j]],
-        x: Math.cos(2*Math.PI*k/numNodes),
-        y: Math.sin(2*Math.PI*k/numNodes),
+        cos: Math.cos(2*Math.PI*k/numNodes),
+        sin: Math.sin(2*Math.PI*k/numNodes),
         edges: [],
         active: false,
       }
@@ -61,7 +59,7 @@ function generateGraph(width, height) {
 // set up the navigation graph
 function setupNav(height, width, padding, mainDiv) {
   // first set up the nodes & edges
-  graph = generateGraph(width, height)
+  graph = generateGraph()
 
   // set up the canvas
   nav = d3.select(mainDiv).append("svg")
@@ -74,8 +72,8 @@ function setupNav(height, width, padding, mainDiv) {
     if (!length) length = shift 
     return a*length/2 + shift/2;
   }
-  function scaleHeight(d) { return scale(d.y, height) }
-  function scaleWidth(d) { return scale(d.x, width) }
+  function scaleWidth(d) { return scale(d.cos, width) }
+  function scaleHeight(d) { return scale(d.sin, height) }
 
   // @TODO: should be able to do these with prototypes
   for (var i=0; i<graph.edges.length; i++) {
@@ -134,28 +132,28 @@ function setupNav(height, width, padding, mainDiv) {
       .enter().append("text")
         .attr("class", "text")
         .attr("transform", "translate("+padding+","+(padding+3)+")")
-        .attr("x", function(d) { return scale(d.x, width, width+85)})
-        .attr("y", function(d) { return scale(d.y, height, height+55)})
+        .attr("x", function(d) { return scale(d.cos, width, width+85)})
+        .attr("y", function(d) { return scale(d.sin, height, height+55)})
         .text(function(d) { return d.name })
         .attr("text-anchor", "middle")
 
   // function to replot nodes & edges
   function replot(selectorX, selectorY, transition) {
-    nav.selectAll("line.link")
+    nav.selectAll("line.link") // recolour edges
        .style("stroke", colour.nav)
        .attr("class", function(d) {
          if (d.active) {
            return "link active";
          } return "link"
        })
-    nav.selectAll("circle.node")
+    nav.selectAll("circle.node") // recolour nods
        .style("fill", colour.nav)
        .attr("class", function(d) {
          if (d.active) { 
            return "node active";
          } return "node"
        })
-    selector.transition()
+    selector.transition() // move the selector
             .ease("linear")
             .duration(1000 * transition)
             .attr("cx", selectorX)
@@ -176,7 +174,7 @@ function setupNav(height, width, padding, mainDiv) {
   selector.selected = initialNode
   selector.selectedEdge = null
 
-  // this is called when moving to a new node
+  // movement to another (active) node
   nodes.on("click", function(node) { 
     if (node.active) {
       selector.selected = node
@@ -186,7 +184,7 @@ function setupNav(height, width, padding, mainDiv) {
         activateEdge(node.edges[i])
       }
       // calculate the amount of movement/transition to be made
-      var transition = 0.5
+      var transition = 0.8 
       if (selector.selectedEdge) {
         transition = (distance(selector.attr("cx"), selector.attr("cy"),
                                 scaleWidth(node), scaleHeight(node))
@@ -199,7 +197,7 @@ function setupNav(height, width, padding, mainDiv) {
     }
   });
 
-  // this is called when moving to the middle of an edge
+  // movement to the middle of an edge (requires interpolation)
   edges.on("mousedown", function(edge) {
     if (edge.active) {
       var x = d3.event.offsetX-padding,
