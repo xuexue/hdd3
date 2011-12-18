@@ -1,3 +1,7 @@
+body {
+  min-width:1200px;
+}
+
 #menu {
   float: right;
   width: 200px;
