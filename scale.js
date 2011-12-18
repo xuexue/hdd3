@@ -13,25 +13,36 @@ function getScales(range) {
   return o
 }
 
+// brushing
+function deactivatePoints() {
+  data.values.forEach(function(v) {
+    v._active = false
+  })
+}
+function activatePoints() {
+  data.values.forEach(function(v) {
+    v._active = true
+  })
+}
+activatePoints()
+
+// colour
 var colour = {
   "main":"steelblue",
   "selector": "lightgreen",
   "drag" : "green",
   "active": "blue",
+  "notbrushed" : "#AAAAAA"
 }
 colour.nav = function(d) {
-  if (d.active) {
-    return colour.active
+  return d.active ? colour.active : colour.main
+}
+
+colour.scheme = d3.scale.category10(data.category)
+colour.point = function(d) {
+  if (d._active) {
+    return colour.scheme(d.category)
   }
-  return colour.main
+  return colour.notbrushed
 }
-
-if (!data.category) {
-  colour.point = function(d) { return colour.main }
-} else if (data.category.length <= 10) {
-  colour.point = d3.scale.category10(data.category)
-} else {
-  colour.point = d3.scale.category20(data.category)
-}
-
 
