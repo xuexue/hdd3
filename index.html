@@ -11,6 +11,7 @@
     <script type="text/javascript" src="scatter.js"></script>
     <script type="text/javascript" src="parallel.js"></script>
     <script type="text/javascript" src="nav.js"></script>
+    <link rel="stylesheet" href="menu.css" type="text/css" />
     <style type="text/css">
       #leftPanel {
         float:left
@@ -18,21 +19,44 @@
       .active {
         cursor:pointer;
       }
+      #rightPanel {
+        float: left;
+      }
     </style>
   </head>
   <body>
-
-    <div id="leftPanel">
-      <div id="navgraph">
-        <!-- for navigation -->
+    <div id="navigation">
+      <div id="leftPanel">
+        <div id="navgraph">
+          <!-- for navigation -->
+        </div>
+        <div id="parallel">
+          <!-- for the parallel coord plot -->
+        </div>
       </div>
-      <div id="parallel">
-        <!-- for the parallel coord plot -->
+
+      <div id="rightPanel">
+        <!-- for the scatter plot -->
       </div>
     </div>
 
-    <div id="rightPanel">
-      <!-- for the scatter plot -->
+    <div id="menu">
+      <ul>
+        <li>Histograms</ li>
+        <li>Scatter Plots</ li>
+        <li>Star Plots</ li>
+        <li>Parallel Axes Chart</ li>
+        <li class="selected">NavGraph</ li>
+        <li>Dataset</ li>
+        <ul>
+          <li class="selected">Iris</li>
+          <li>Uniform Random</li>
+          <li>Bivariate Normal</li>
+          <li>Import</li>
+        </ul>
+        <li>About</ li>
+        <li><a href="https://github.com/xuexue/hdd3" target="_blank" />Github</a></ li>
+      </ul>
     </div>
 
     <script type="text/javascript">
