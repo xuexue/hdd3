@@ -200,7 +200,6 @@ function setupNav(height, width, padding, mainDiv) {
   // movement to the middle of an edge (requires interpolation)
   edges.on("mousedown", function(edge) {
     if (edge.active) {
-      console.log(d3.event)
       var x, y
       if (d3.event.offsetX) {
         x = d3.event.offsetX-padding
