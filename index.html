@@ -13,15 +13,10 @@
     <script type="text/javascript" src="nav.js"></script>
     <link rel="stylesheet" href="menu.css" type="text/css" />
     <style type="text/css">
-      #leftPanel {
-        float:left
-      }
-      .active {
-        cursor:pointer;
-      }
-      #rightPanel {
-        float: left;
-      }
+      #leftPanel { float:left }
+      .active { cursor:pointer; }
+      #rightPanel { float: left; }
+      #legend { float: left; display: block; padding-left: 20px }
     </style>
   </head>
   <body>
@@ -32,6 +27,9 @@
         </div>
         <div id="parallel">
           <!-- for the parallel coord plot -->
+        </div>
+        <div id="legend">
+          <!-- stuff -->
         </div>
       </div>
 
@@ -63,6 +61,17 @@
       scatter.setup(550, 550, 20, "#rightPanel");
       parallel.setup(200,300,20, "#parallel");
       setupNav(200,200,80, "#navgraph");
+
+      if (data.category) {
+        legend = d3.select("#legend")
+        legend.text("Categories: ")
+        legend.selectAll("legend")
+          .data(data.category)
+          .enter().append("span")
+          .attr("class", "legend")
+          .style("color", function(d) { return colour.scheme(d) })
+          .text(function(d) { return d+" " })
+      }
     </script>
 
   </body>
