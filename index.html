@@ -16,15 +16,21 @@
     <link rel="stylesheet" href="reset.css" type="text/css" />
     <link rel="stylesheet" href="menu.css" type="text/css" />
     <style type="text/css">
-      #graphic {max-width:900px; float:left; padding:20px; }
+      #graphic {max-width:990px; float:left; padding:20px; }
       svg { background: white; clear:none; }
       #leftPanel { float:left }
       .active { cursor:pointer; }
       #rightPanel { float: left; }
       #legend { float: left; display: block; padding-left: 20px }
+      .axis text {
+        font-size:12px;
+      }
     </style>
   </head>
   <body>
+    <div id="topbar">
+      High Dimensional Data Visualized in D3 (hdd3)
+    </div>
     <div id="graphic">
     </div>
 
@@ -41,10 +47,8 @@
         <li>Chart Type</ li>
         <ul>
           <li>Histograms</ li>
-          <li>Scatter Plots</ li>
-          <li>Star Plots</ li>
-          <li>Parallel Axes Chart</ li>
-          <li class="selected">Navigation Graph</ li>
+          <li id="chartscatter"><a href='javascript:useChart("chartscatter")'>Scatter Plots</a></ li>
+          <li id="chartnavgraph"><a href='javascript:useChart("chartnavgraph")'>Navigation Graph</a></ li>
         </ul>
         <li><a href="https://github.com/xuexue/hdd3" target="_blank" />Github</a></ li>
       </ul>
@@ -52,20 +56,23 @@
 
     <script type="text/javascript">
       var dataSets = {'datairis':iris, 'datarand':random}
+      var charts = {'chartscatter':scattermatrix, 'chartnavgraph':navgraph}
       document.data = 'datairis'
-      document.chart = navgraph
+      document.chart = 'chartnavgraph'
       function useData(data) {
         d3.select('#'+document.data).attr("class", "")
         d3.select('#'+data).attr("class", "selected")
         document.data = data
-        document.chart(dataSets[document.data])
+        charts[document.chart](dataSets[document.data])
       }
       function useChart(chart) {
+        d3.select('#'+document.chart).attr("class", "")
+        d3.select('#'+chart).attr("class", "selected")
         document.chart = chart
-        document.chart(document.data)
+        charts[document.chart](dataSets[document.data])
       }
      //useData('datairis')
-     scattermatrix(iris)
+     //scattermatrix(iris)
      ///histogram(dataSets[document.data])
     </script>
 

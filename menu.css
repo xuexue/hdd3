@@ -1,15 +1,22 @@
 body {
-  width:1200px;
+  width:1250px;
+  font-family: arial;
+}
+
+#topbar {
+  clear:both;
+  font-weight: bold;
+  font-size:25px;
+  padding: 20px;
 }
 
 #menu {
   float: right;
   width: 200px;
-  margin-right: 25px;
+  margin-right: 5px;
   background: #EEE;
-  font-family: arial;
-  font-weight: bold;
   clear: none;
+  font-weight: bold;
 }
 
 #menu a {
