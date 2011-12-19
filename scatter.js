@@ -33,6 +33,7 @@ function scatter(data, parent) {
         .attr("cx", this.width/2)
         .attr("cy", this.height/2)
         .attr("r", 3)
+        .style("fill-opacity", 0.5)
         .style("fill", colour.point)
 
     this.brush = d3.svg.brush()

@@ -3,7 +3,7 @@ function histograms(data) {
   data = wrapData(data)
   histograms.data = data
 
-  var eachSize = 250
+  var eachSize = 200
   d3.select("#graphic").html("")
   
   data.traits.forEach(function(trait) {

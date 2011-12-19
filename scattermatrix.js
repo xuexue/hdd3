@@ -34,6 +34,7 @@ function scattermatrix(data) {
     }
     smatrix.scatters.push(plot);
   }
+  colour.legend("#graphic")
 
   smatrix.recolour = function() {
     smatrix.scatters.forEach(function(s) { s.recolour(); });

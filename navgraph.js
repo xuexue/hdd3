@@ -17,7 +17,6 @@ function navgraph(data) {
       '<div id="leftPanel">' +
         '<div id="nav"></div>' +
         '<div id="parallel"></div>' +
-        '<div id="legend"></div>' +
       '</div>' +
       '<div id="rightPanel">' +
       '</div>');
@@ -26,16 +25,7 @@ function navgraph(data) {
                   .plot('#rightPanel')
   navgraph.parallel.setup(200,300,20, "#parallel");
   navgraph.nav.setup(200,200,80, "#nav");
-  if (data.category) {
-    legend = d3.select("#legend")
-    legend.text("Categories: ")
-    legend.selectAll("legend")
-      .data(data.category)
-      .enter().append("span")
-      .attr("class", "legend")
-      .style("color", function(d) { return colour.scheme(d) })
-      .text(function(d) { return d+" " })
-  }
+  colour.legend('#leftPanel')
   return navgraph;
 }
 
