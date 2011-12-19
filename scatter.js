@@ -1,10 +1,10 @@
 function scatter(data, parent) {
   var scatter = {}
+
   scatter.setup = function (height, width, padding, mainDiv)  {
     // scales and scaled-getters
-    this.data = data
-    this.xScales = getScales([padding, width+padding])
-    this.yScales = getScales([height+padding, padding])
+    this.xScales = data.getScales([padding, width+padding])
+    this.yScales = data.getScales([height+padding, padding])
 
     // an identity scale used for brushing
     this.identityX = d3.scale.linear()
@@ -15,7 +15,7 @@ function scatter(data, parent) {
           .range([height+padding, padding])
 
     // chart
-    this.chart = d3.select(mainDiv)
+    this.chart = d3.select(mainDiv).html("")
         .append("svg")
         .attr("class", "chart")
         .attr("width", width + 2*padding)
@@ -41,7 +41,7 @@ function scatter(data, parent) {
     // Highlight the selected circles.
     function brushing() {
       var e = scatter.brush.extent();
-      deactivatePoints()
+      data.deactivatePoints()
       data.values.forEach(function(d) {
         if (e[0][1] <= scatter.getY(d) &&
             e[1][1] >= scatter.getY(d) && 
@@ -56,7 +56,7 @@ function scatter(data, parent) {
     // If the brush is empty, select all circles.
     function brushend(p) {
       if (!scatter.brush.hasSelected)  {
-        activatePoints()
+        data.activatePoints()
         parent.recolour()
       } else {
         scatter.chart.selectAll("rect.extent").style("fill-opacity", 0)

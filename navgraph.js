@@ -1,5 +1,6 @@
 function navgraph(data) {
-  navgraph = {}
+  var navgraph = {}
+  data = wrapData(data)
   navgraph.data = data
 
   navgraph.scatter = scatter(data, navgraph)
@@ -25,6 +26,6 @@ function navgraph(data) {
       .style("color", function(d) { return colour.scheme(d) })
       .text(function(d) { return d+" " })
   }
-  return navgraph
+  return navgraph;
 }
 

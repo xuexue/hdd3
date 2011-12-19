@@ -4,9 +4,7 @@
     <title>Prototyping Scatter Plot</title>
     <script type="text/javascript" src="lib/d3.js"></script>
     <script type="text/javascript" src="data/iris.js"></script>
-    <!--
     <script type="text/javascript" src="randdata.js"></script>
-    -->
     <script type="text/javascript" src="scale.js"></script>
     <script type="text/javascript" src="scatter.js"></script>
     <script type="text/javascript" src="parallel.js"></script>
@@ -44,8 +42,8 @@
         <li>About</ li>
         <li>Dataset</ li>
         <ul>
-          <li class="selected">Iris</li>
-          <li>Uniform Random</li>
+          <li class="selected"><a href="javascript:navgraph(iris)">Iris</a></li>
+          <li><a href="javascript:navgraph(random)">Uniform Random</a></li>
           <li>Bivariate Normal</li>
           <li>Import</li>
         </ul>
@@ -59,7 +57,7 @@
     </div>
 
     <script type="text/javascript">
-      navgraph(data);
+      navgraph(iris);
     </script>
 
   </body>

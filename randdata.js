@@ -8,10 +8,7 @@ function randpoint() {
     a:Math.random()*4,
   }
 }
-var data = {
+var random = {
   'traits': ['x', 'y', 'z', 't', 'a'],
-  'category': 1,
-  'values' : d3.range(50).map(randpoint)
+  'values' : d3.range(200).map(randpoint)
 };
-
-

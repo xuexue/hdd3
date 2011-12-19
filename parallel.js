@@ -3,13 +3,13 @@ function parallel(data, parent) {
 
   parallel.setup = function(height, width, padding, mainDiv) {
     // scales and scaled-getters
-    this.o = getScales([height, 0]);
+    this.o = data.getScales([height, 0]);
     var scale = this.o.scale,
         scaleGet = this.o.scaleGet;
 
     // chart
     var eachWidth = width / (data.traits.length - 1)
-    this.chart = d3.select(mainDiv)
+    this.chart = d3.select(mainDiv).html("")
         .append("svg")
         .attr("class", "chart")
         .attr("width", width + 2*padding)

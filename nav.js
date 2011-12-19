@@ -62,7 +62,8 @@ function nav(data, parent) {
     var graph = nav.generateGraph()
 
     // set up the canvas
-    nav = d3.select(mainDiv).append("svg")
+    nav = d3.select(mainDiv).html("")
+        .append("svg")
         .attr("width", width + 2*padding)
         .attr("height", height + 2*padding);
 
@@ -161,7 +162,7 @@ function nav(data, parent) {
     }
 
     // position the selector
-    selector = nav.selectAll("selectornode")
+    var selector = nav.selectAll("selectornode")
           .data([1])
         .enter().append("circle")
           .attr("class", "selector")
