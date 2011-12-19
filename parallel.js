@@ -29,6 +29,7 @@ function parallel(data, parent) {
            .attr("x2", padding + i*eachWidth)
            .attr("y2", function(d) { return parallel.o.scaleGet[current](d) })
            .attr("width", 1)
+           .style("stroke-opacity", 0.5)
            .style("stroke", colour.point)
     }
 
@@ -49,10 +50,12 @@ function parallel(data, parent) {
         .attr("text-anchor", "middle")
         .attr("y", -9)
         .text(function(d) { return d; })
+    return parallel
   }
 
   parallel.recolour = function() {
     parallel.chart.selectAll("line.path").style("stroke", colour.point)
+    return parallel
   }
 
   return parallel

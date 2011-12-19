@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Prototyping Scatter Plot</title>
+    <title>hdd3</title>
     <script type="text/javascript" src="lib/d3.js"></script>
     <script type="text/javascript" src="lib/histogram.js"></script>
     <script type="text/javascript" src="data/iris.js"></script>
@@ -40,16 +40,16 @@
         <li>About</ li>
         <li>Dataset</ li>
         <ul>
-          <li id="datairis"><a href='javascript:useData("datairis")'>Iris</a></li>
-          <li id="datarand"><a href='javascript:useData("datarand")'>Uniform Random</a></li>
+          <li id="datairis" class="selected" onclick='javascript:useData("datairis")'>Iris</li>
+          <li id="datarand" onclick='javascript:useData("datarand")'>Uniform Random</li>
           <!--li>Bivariate Normal</li-->
           <li>Import</li>
         </ul>
         <li>Chart Type</ li>
         <ul>
-          <li id="charthist"><a href='javascript:useChart("charthist")'>Histograms</a></ li>
-          <li id="chartscatter"><a href='javascript:useChart("chartscatter")'>Scatter Plots</a></ li>
-          <li id="chartnavgraph"><a href='javascript:useChart("chartnavgraph")'>Navigation Graph</a></ li>
+          <li id="charthist" onclick='javascript:useChart("charthist")'>Histograms</ li>
+          <li id="chartscatter" onclick='javascript:useChart("chartscatter")'>Scatter Plots</ li>
+          <li id="chartnavgraph" class="selected" onclick='javascript:useChart("chartnavgraph")'>Navigation Graph</ li>
         </ul>
         <li><a href="https://github.com/xuexue/hdd3" target="_blank" />Github</a></ li>
       </ul>
@@ -72,7 +72,7 @@
         document.chart = chart
         charts[document.chart](dataSets[document.data])
       }
-     //useData('datairis')
+     useData('datairis')
      //scattermatrix(iris)
      ///histogram(dataSets[document.data])
      //histograms(iris)//.setup(100, 100, 20, 'p.L').plot('#graphic')

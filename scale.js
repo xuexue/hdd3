@@ -48,14 +48,16 @@ function wrapData(data) {
   }
 
   colour.legend = function(div) {
-    var legend = d3.select(div).append('div').attr("id", "legend")
-    legend.text("Categories: ")
-    legend.selectAll("legend")
-      .data(data.category)
-      .enter().append("span")
-      .attr("class", "legend")
-      .style("color", function(d) { return colour.scheme(d) })
-      .text(function(d) { return d+" " })
+    if (data.category) {
+      var legend = d3.select(div).append('div').attr("id", "legend")
+      legend.text("Categories: ")
+      legend.selectAll("legend")
+        .data(data.category)
+        .enter().append("span")
+        .attr("class", "legend")
+        .style("color", function(d) { return colour.scheme(d) })
+        .text(function(d) { return d+" " })
+    }
   }
   return data
 }

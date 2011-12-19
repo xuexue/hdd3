@@ -105,7 +105,7 @@ function nav(data, parent) {
           .attr("y1", function(d) { return scaleHeight(d.source); })
           .attr("x2", function(d) { return scaleWidth(d.target); })
           .attr("y2", function(d) { return scaleHeight(d.target); })
-          .style("stroke-width", 5)
+          .style("stroke-width", 3)
           .style("stroke", colour.nav)
           .attr("class", function(d) {
             if (d.active) {
