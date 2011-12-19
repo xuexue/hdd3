@@ -113,6 +113,7 @@ function scatter(data, parent) {
 
   scatter.recolour = function() {
     scatter.dots.style("fill", colour.point)
+    return scatter
   }
 
   scatter.getX = null

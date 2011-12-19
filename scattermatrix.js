@@ -3,7 +3,7 @@ function scattermatrix(data) {
   data = wrapData(data)
   smatrix.data = data
 
-  var width = height = 800;
+  var width = height = 900;
   var eachSize = width/data.traits.length;
 
   var pairs = []
@@ -17,7 +17,7 @@ function scattermatrix(data) {
   smatrix.scatters = []
 
   for (var i=0; i<pairs.length; i++) {
-    var plot = scatter(data, smatrix).setup(eachSize, eachSize, 10)
+    var plot = scatter(data, smatrix).setup(eachSize-20, eachSize-20, 10)
       .plot('#graphic') .frame()
       .position(data.traits[pairs[i][1]],data.traits[pairs[i][0]], 0.5)
     // add label on diagonal
