@@ -1,9 +1,10 @@
 function histogram(data) {
-  histogram = {}
+  var histogram = {}
   histogram.setup = function(height, width, padding, trait) {
     this.width = width
     this.height = height
     this.padding = padding
+    this.trait = trait
     this.hist = d3.layout.histogram()
       (data.values.map(function(d) { return d[trait]; }));
     this.xScale = d3.scale.ordinal()
@@ -18,7 +19,7 @@ function histogram(data) {
   histogram.plot = function(mainDiv) {
     var vis = d3.select(mainDiv).append("svg:svg")
         .attr("width", this.width+2*this.padding)
-        .attr("height", this.height+2*this.padding)
+        .attr("height", this.height+2*this.padding+10)
       .append("svg:g")
         .attr("transform", "translate("+this.padding+","+this.padding+")");
 
@@ -32,6 +33,7 @@ function histogram(data) {
         .attr("y", 0)
         .attr("height", function(d) { return histogram.yScale(d.y); })
         .style("stroke", "white")
+        .style("fill", colour.scheme(this.trait))
      
     vis.append("svg:line")
         .attr("x1", 0)
@@ -39,6 +41,12 @@ function histogram(data) {
         .attr("y1", this.height)
         .attr("y2", this.height)
         .style("stroke", "black")
+
+    vis.append("text")
+        .attr("x", this.width/2)
+        .attr("y", this.height + this.padding)
+        .attr("text-anchor", "middle")
+        .text(this.trait)
     return histogram
   }
   return histogram
