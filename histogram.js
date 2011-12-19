@@ -19,7 +19,7 @@ function histogram(data) {
   histogram.plot = function(mainDiv) {
     var vis = d3.select(mainDiv).append("svg:svg")
         .attr("width", this.width+2*this.padding)
-        .attr("height", this.height+2*this.padding+10)
+        .attr("height", this.height+2*this.padding+30)
       .append("svg:g")
         .attr("transform", "translate("+this.padding+","+this.padding+")");
 
@@ -42,10 +42,27 @@ function histogram(data) {
         .attr("y2", this.height)
         .style("stroke", "black")
 
+    // add min and max
+    var range = this.xScale.domain(),
+        min = range[0],
+        max = range[range.length-1]
+    vis.append("text")
+        .attr("x", 0)
+        .attr("y", this.height + this.padding*.75)
+        .attr("text-anchor", "middle")
+        .text(range[0].toPrecision(2))
+    vis.append("text")
+        .attr("x", this.width)
+        .attr("y", this.height + this.padding*.75)
+        .attr("text-anchor", "middle")
+        .text(max.toPrecision(2))
+
+    // add axis label
     vis.append("text")
         .attr("x", this.width/2)
-        .attr("y", this.height + this.padding)
+        .attr("y", this.height + this.padding*1.25)
         .attr("text-anchor", "middle")
+        .style("font-weight", "bold")
         .text(this.trait)
     return histogram
   }
