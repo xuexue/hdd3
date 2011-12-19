@@ -13,9 +13,19 @@ function navgraph(data) {
   }
 
   // setup
-  navgraph.scatter.setup(550, 550, 20, "#rightPanel");
+  d3.select("#graphic").html(
+      '<div id="leftPanel">' +
+        '<div id="nav"></div>' +
+        '<div id="parallel"></div>' +
+        '<div id="legend"></div>' +
+      '</div>' +
+      '<div id="rightPanel">' +
+      '</div>');
+
+  navgraph.scatter.setup(550, 550, 20)
+                  .plot('#rightPanel')
   navgraph.parallel.setup(200,300,20, "#parallel");
-  navgraph.nav.setup(200,200,80, "#navgraph");
+  navgraph.nav.setup(200,200,80, "#nav");
   if (data.category) {
     legend = d3.select("#legend")
     legend.text("Categories: ")

@@ -10,5 +10,5 @@ function randpoint() {
 }
 var random = {
   'traits': ['x', 'y', 'z', 't', 'a'],
-  'values' : d3.range(200).map(randpoint)
+  'values' : d3.range(150).map(randpoint)
 };

@@ -1,11 +1,13 @@
 function scatter(data, parent) {
   var scatter = {}
 
-  scatter.setup = function (height, width, padding, mainDiv)  {
+  scatter.setup = function (height, width, padding)  {
+    this.width = width
+    this.height = height
+    this.padding = padding
     // scales and scaled-getters
     this.xScales = data.getScales([padding, width+padding])
     this.yScales = data.getScales([height+padding, padding])
-
     // an identity scale used for brushing
     this.identityX = d3.scale.linear()
           .domain([padding, width+padding])
@@ -13,19 +15,22 @@ function scatter(data, parent) {
     this.identityY = d3.scale.linear()
           .domain([height+padding, padding])
           .range([height+padding, padding])
+    return scatter;
+  }
 
+  scatter.plot = function(mainDiv) {
     // chart
-    this.chart = d3.select(mainDiv).html("")
+    this.chart = d3.select(mainDiv)
         .append("svg")
         .attr("class", "chart")
-        .attr("width", width + 2*padding)
-        .attr("height", height + 2*padding);
+        .attr("width", this.width + 2*this.padding)
+        .attr("height", this.height + 2*this.padding)
 
     this.dots = this.chart.selectAll("circle")
         .data(data.values)
         .enter().append("circle")
-        .attr("cx", width/2)
-        .attr("cy", height/2)
+        .attr("cx", this.width/2)
+        .attr("cy", this.height/2)
         .attr("r", 3)
         .style("fill", colour.point)
 
@@ -62,6 +67,7 @@ function scatter(data, parent) {
         scatter.chart.selectAll("rect.extent").style("fill-opacity", 0)
       }
     }
+    return scatter;
   }
 
   scatter.recolour = function() {
@@ -71,7 +77,7 @@ function scatter(data, parent) {
   scatter.getX = null
   scatter.getY = null
 
-  scatter.plot = function(xtrait, ytrait, transition) {
+  scatter.position = function(xtrait, ytrait, transition) {
     if (!this.xtrait || this.xtrait == xtrait || this.ytrait == ytrait) {
       this.xtrait = xtrait
       this.ytrait = ytrait
@@ -93,6 +99,7 @@ function scatter(data, parent) {
         .attr("cx", scatter.getX)
         .attr("cy", scatter.getY)
     scatter.chart.call(scatter.brush.y(scatter.identityY).x(scatter.identityX))
+    return scatter
   }
 
   scatter.interpolate = function(xtrait, ytrait, ratio, transition) {
@@ -114,6 +121,7 @@ function scatter(data, parent) {
         .duration(1000*transition)
         .attr("cx", scatter.getX)
         .attr("cy", scatter.getY)
+    return scatter
   }
 
   return scatter;

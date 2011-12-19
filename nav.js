@@ -93,7 +93,7 @@ function nav(data, parent) {
     for (var i = 0; i< initialNode.edges.length; i++) {
       activateEdge(initialNode.edges[i])
     }
-    parent.scatter.plot(initialNode.traits[0], initialNode.traits[1], 0.5)
+    parent.scatter.position(initialNode.traits[0], initialNode.traits[1], 0.5)
 
     // position the non-moving elements: nodes edges and labels
     var edges = nav.selectAll("line.link")
@@ -192,7 +192,7 @@ function nav(data, parent) {
                         / selector.selectedEdge.length)
         }
         // plot!!
-        parent.scatter.plot(node.traits[0], node.traits[1], transition)
+        parent.scatter.position(node.traits[0], node.traits[1], transition)
         replot(scaleWidth(node), scaleHeight(node), transition)
         selector.selectedEdge = null
       }

@@ -1,14 +1,15 @@
 body {
-  min-width:1200px;
+  width:1200px;
 }
 
 #menu {
   float: right;
   width: 200px;
-  margin: 25px;
+  margin-right: 25px;
   background: #EEE;
   font-family: arial;
   font-weight: bold;
+  clear: none;
 }
 
 #menu a {
