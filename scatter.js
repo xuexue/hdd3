@@ -25,6 +25,7 @@ function scatter(data, parent) {
         .attr("class", "chart")
         .attr("width", this.width + 2*this.padding)
         .attr("height", this.height + 2*this.padding)
+        .style("padding-right", "5px")
 
     this.dots = this.chart.selectAll("circle")
         .data(data.values)
@@ -68,6 +69,46 @@ function scatter(data, parent) {
       }
     }
     return scatter;
+  }
+  
+  scatter.frame = function() {
+    scatter.chart.append("rect")
+           .attr("class", "frame")
+           .attr("x", this.padding/2)
+           .attr("y", this.padding/2)
+           .attr("width", this.width + this.padding-0.5)
+           .attr("height", this.height + this.padding-0.5)
+           .style("fill", "white").style("fill-opacity", 0.125)
+           .style("stroke", "#AAA")
+    return scatter
+  }
+
+  scatter.label = function(text) {
+    scatter.chart.append("text")
+           .attr("x", this.width*0.25)
+           .attr("y", this.height*0.25)
+           .attr("text-anchor", "middle")
+           .text(text)
+    return scatter
+  }
+
+  scatter.yAxis = function(orient) {
+    var axes = d3.svg.axis().orient(orient).ticks(5).tickSize(1)
+    scatter.chart.attr("width", this.width + 2*this.padding + 30)
+    scatter.chart.append("svg:g")
+           .attr("class","axis")
+           .attr("transform", "translate("+(this.width+this.padding*3)+",0)")
+           .call(axes.scale(scatter.yScales.scale[scatter.ytrait]));
+    return scatter
+  }
+  scatter.xAxis = function(orient) {
+    var axes = d3.svg.axis().orient(orient).ticks(5).tickSize(1)
+    scatter.chart.attr("height", this.height + 2*this.padding + 30)
+    scatter.chart.append("svg:g")
+           .attr("class","axis")
+           .attr("transform", "translate(0,"+ (this.height+this.padding*3) +")")
+           .call(axes.scale(scatter.xScales.scale[scatter.xtrait]));
+    return scatter
   }
 
   scatter.recolour = function() {
