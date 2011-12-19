@@ -9,6 +9,7 @@
     <script type="text/javascript" src="scale.js"></script>
     <script type="text/javascript" src="scatter.js"></script>
     <script type="text/javascript" src="parallel.js"></script>
+    <script type="text/javascript" src="histogram.js"></script>
     <script type="text/javascript" src="nav.js"></script>
     <script type="text/javascript" src="navgraph.js"></script>
     <script type="text/javascript" src="histograms.js"></script>
@@ -46,7 +47,7 @@
         </ul>
         <li>Chart Type</ li>
         <ul>
-          <li>Histograms</ li>
+          <li id="charthist"><a href='javascript:useChart("charthist")'>Histograms</a></ li>
           <li id="chartscatter"><a href='javascript:useChart("chartscatter")'>Scatter Plots</a></ li>
           <li id="chartnavgraph"><a href='javascript:useChart("chartnavgraph")'>Navigation Graph</a></ li>
         </ul>
@@ -56,7 +57,7 @@
 
     <script type="text/javascript">
       var dataSets = {'datairis':iris, 'datarand':random}
-      var charts = {'chartscatter':scattermatrix, 'chartnavgraph':navgraph}
+      var charts = {'chartscatter':scattermatrix, 'chartnavgraph':navgraph, 'charthist':histograms}
       document.data = 'datairis'
       document.chart = 'chartnavgraph'
       function useData(data) {
@@ -74,6 +75,7 @@
      //useData('datairis')
      //scattermatrix(iris)
      ///histogram(dataSets[document.data])
+     //histograms(iris)//.setup(100, 100, 20, 'p.L').plot('#graphic')
     </script>
 
   </body>
