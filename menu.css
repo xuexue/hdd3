@@ -33,10 +33,6 @@ body {
   background: #DDD;
 }
 
-#menu li:hover {
-  background: #DDD;
-}
-
 #menu li ul {
   padding:0px;
   margin: 0px

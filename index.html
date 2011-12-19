@@ -42,22 +42,37 @@
         <li>About</ li>
         <li>Dataset</ li>
         <ul>
-          <li class="selected"><a href="javascript:navgraph(iris)">Iris</a></li>
-          <li><a href="javascript:navgraph(random)">Uniform Random</a></li>
-          <li>Bivariate Normal</li>
+          <li id="datairis"><a href='javascript:useData("datairis")'>Iris</a></li>
+          <li id="datarand"><a href='javascript:useData("datarand")'>Uniform Random</a></li>
+          <!--li>Bivariate Normal</li-->
           <li>Import</li>
         </ul>
-        <li>Histograms</ li>
-        <li>Scatter Plots</ li>
-        <li>Star Plots</ li>
-        <li>Parallel Axes Chart</ li>
-        <li class="selected">Navigation Graph</ li>
+        <li>Chart Type</ li>
+        <ul>
+          <li>Histograms</ li>
+          <li>Scatter Plots</ li>
+          <li>Star Plots</ li>
+          <li>Parallel Axes Chart</ li>
+          <li class="selected">Navigation Graph</ li>
+        </ul>
         <li><a href="https://github.com/xuexue/hdd3" target="_blank" />Github</a></ li>
       </ul>
     </div>
 
     <script type="text/javascript">
-      navgraph(iris);
+      var dataSets = {'datairis':iris, 'datarand':random}
+      document.data = 'datairis'
+      document.chart = navgraph
+      function useData(data) {
+        d3.select('#'+document.data).attr("class", "")
+        d3.select('#'+data).attr("class", "selected")
+        document.data = data
+        document.chart(dataSets[document.data])
+      }
+      function useChart(chart) {
+        document.chart = chart
+        document.chart(document.data)
+      }
     </script>
 
   </body>
