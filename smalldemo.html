@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>hdd3</title>
+    <script type="text/javascript" src="lib/d3.js"></script>
+    <script type="text/javascript" src="data/iris.js"></script>
+    <script type="text/javascript" src="data/data.js"></script>
+    <script type="text/javascript" src="components/scatter.js"></script>
+  </head>
+  <body>
+    <div id="demo"></div>
+    <script type="text/javascript">
+      var view = {}
+      view.scatter = scatter(wrapData(iris), view).setup(400,400,10)
+                      .plot('#demo').frame()
+                      .position('p.L', 'p.W', 0.5)
+                      .yAxis("right")
+                      .xAxis("bottom")
+      view.recolour = view.scatter.recolour
+    </script>
+  </body>
+</html>
+ 
