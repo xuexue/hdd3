@@ -55,8 +55,6 @@ body {
 }
 
 #menu li ul li:hover {
-  cursor:pointer;
-  cursor:hand;
   background: #CCC;
 }
 #menu li ul li.selected {
