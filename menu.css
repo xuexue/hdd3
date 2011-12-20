@@ -42,7 +42,7 @@ body {
   background: #DDD;
 }
 
-#aboutlink:hover {
+#aboutlink:hover , #d3link:hover, #githublink:hover {
   background: #DDD;
 }
 #menu li ul {

@@ -55,8 +55,8 @@
           <li id="chartscatter" onclick='javascript:useChart("chartscatter")'>Scatter Plots</ li>
           <li id="chartnavgraph" class="selected" onclick='javascript:useChart("chartnavgraph")'>Navigation Graph</ li>
         </ul>
-        <li><a href="http://mbostock.github.com/d3/" target="_blank" />d3.js website</a></ li>
-        <li><a href="https://github.com/xuexue/hdd3" target="_blank" />Github</a></ li>
+        <li id="d3link"><a href="http://mbostock.github.com/d3/" target="_blank" />d3.js website</a></ li>
+        <li id="githublink"><a href="https://github.com/xuexue/hdd3" target="_blank" />Github</a></ li>
       </ul>
     </div>
 
@@ -147,7 +147,10 @@
         }
         reader.onload = function (event) {
           dataSets['custom'] = loadCustomData(event.target.result)
-          $("#fileupload").html("Success!")
+          $("#fileupload").html("Data loaded")
+          $("#custom")[0].onclick = function() {
+            useData("custom")
+          }
           useData('custom');
         }
         reader.readAsText(file)
