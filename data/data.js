@@ -15,7 +15,7 @@ function loadCustomData(newdata) {
   var custom = {}
   custom.values = d3.csv.parse(newdata)
   // @TODO: check for null
-
+  // There are a lot of things that could go wrong here...
   custom.traits = []
   for (var key in custom.values[0]) {
     if (key === 'length' || !custom.values[0].hasOwnProperty(key)) {

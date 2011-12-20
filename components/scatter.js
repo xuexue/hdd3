@@ -8,7 +8,8 @@ function scatter(data, parent) {
     // scales and scaled-getters
     this.xScales = data.getScales([padding, width+padding])
     this.yScales = data.getScales([height+padding, padding])
-    // an identity scale used for brushing
+    // an identity scale used to get brushing to work
+    // not really important for plotting the histogram
     this.identityX = d3.scale.linear()
           .domain([padding, width+padding])
           .range([padding, width+padding])
@@ -19,14 +20,14 @@ function scatter(data, parent) {
   }
 
   scatter.plot = function(mainDiv) {
-    // chart
+    // the main chart
     this.chart = d3.select(mainDiv)
         .append("svg")
         .attr("class", "chart")
         .attr("width", this.width + 2*this.padding)
         .attr("height", this.height + 2*this.padding)
         .style("padding-right", "5px")
-
+    // the actual points
     this.dots = this.chart.selectAll("circle")
         .data(data.values)
         .enter().append("circle")
@@ -35,18 +36,18 @@ function scatter(data, parent) {
         .attr("r", 3)
         .style("fill-opacity", 0.5)
         .style("fill", colour.point)
-
+    // brushing
     this.brush = d3.svg.brush()
          .on("brushstart", brushstart)
          .on("brush", brushing)
          .on("brushend", brushend);
-    this.brush.hasSelected = false
-    function brushstart(p) {
+    this.brush.hasSelected = false // whether there are points selected
+    function brushstart(p) {       // called when use starts brushing
       scatter.brush.hasSelected = false
-      scatter.chart.selectAll("rect.extent").style("fill-opacity", 0.125)
+      scatter.chart.selectAll("rect.extent")
+             .style("fill-opacity", 0.125) // show brushed area
     }
-    // Highlight the selected circles.
-    function brushing() {
+    function brushing() {          // called as brushing is occuring
       var e = scatter.brush.extent();
       data.deactivatePoints()
       data.values.forEach(function(d) {
@@ -58,16 +59,15 @@ function scatter(data, parent) {
           scatter.brush.hasSelected = true
         }
       }); 
-      parent.recolour()
+      parent.recolour() // highlight relevant circles
     }
-    // If the brush is empty, select all circles.
-    function brushend(p) {
+    function brushend(p) {         // called when done brushing
       if (!scatter.brush.hasSelected)  {
+        // If the brush is empty, select all circles.
         data.activatePoints()
         parent.recolour()
-      } else {
-        scatter.chart.selectAll("rect.extent").style("fill-opacity", 0)
       }
+      scatter.chart.selectAll("rect.extent").style("fill-opacity", 0)
     }
     return scatter;
   }

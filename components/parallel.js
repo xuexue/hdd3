@@ -4,16 +4,22 @@ function parallel(data, parent) {
   parallel.setup = function(height, width, padding, mainDiv) {
     // scales and scaled-getters
     this.o = data.getScales([height, 0]);
-    var scale = this.o.scale,
-        scaleGet = this.o.scaleGet;
+    this.scale = this.o.scale;
+    this.scaleGet = this.o.scaleGet;
+    this.width = width
+    this.height = height
+    this.padding = padding
+    return parallel
+  }
 
+  parallel.plot = function(mainDiv) {
     // chart
-    var eachWidth = width / (data.traits.length - 1)
+    var eachWidth = this.width / (data.traits.length - 1)
     this.chart = d3.select(mainDiv).html("")
         .append("svg")
         .attr("class", "chart")
-        .attr("width", width + 2*padding)
-        .attr("height", height + 2*padding);
+        .attr("width", this.width + 2*this.padding)
+        .attr("height", this.height + 2*this.padding);
 
     // lines
     for (var i=1; i< data.traits.length; i++) {
@@ -22,11 +28,11 @@ function parallel(data, parent) {
       parallel.chart.selectAll("linechart")
           .data(data.values)
            .enter().append("svg:line")
-          .attr("transform", "translate(0,"+padding+")")
+          .attr("transform", "translate(0,"+this.padding+")")
            .attr("class", "path")
-           .attr("x1", padding + (i-1)*eachWidth)
+           .attr("x1", this.padding + (i-1)*eachWidth)
            .attr("y1", function(d) { return parallel.o.scaleGet[prev](d) })
-           .attr("x2", padding + i*eachWidth)
+           .attr("x2", this.padding + i*eachWidth)
            .attr("y2", function(d) { return parallel.o.scaleGet[current](d) })
            .attr("width", 1)
            .style("stroke-opacity", 0.5)
@@ -43,9 +49,9 @@ function parallel(data, parent) {
         .enter().append("svg:g")
         .attr("class", "y axis")
         .attr("transform", function(d, i) {
-          return "translate("+((i*eachWidth)+padding)+","+padding+")"
+          return "translate("+((i*eachWidth)+parallel.padding)+","+parallel.padding+")"
         })
-        .each(function(d){ d3.select(this).call(axes.scale(scale[d])); })
+        .each(function(d){ d3.select(this).call(axes.scale(parallel.scale[d])); })
       .append("svg:text")
         .attr("text-anchor", "middle")
         .attr("y", -9)

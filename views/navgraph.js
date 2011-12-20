@@ -23,8 +23,9 @@ function navgraph(data) {
 
   navgraph.scatter.setup(550, 550, 20)
                   .plot('#rightPanel')
-  navgraph.parallel.setup(200,300,20, "#parallel");
-  navgraph.nav.setup(200,200,80, "#nav");
+  navgraph.parallel.setup(200,300,20)
+                   .plot('#parallel');
+  navgraph.nav.setup(200,200,80).plot("#nav");
   colour.legend('#leftPanel')
   return navgraph;
 }
