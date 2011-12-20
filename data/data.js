@@ -10,6 +10,7 @@ colour.nav = function(d) {
   return d.active ? colour.active : colour.main
 }
 
+// load data in CSV
 function loadCustomData(newdata) {
   var custom = {}
   custom.values = d3.csv.parse(newdata)
@@ -44,6 +45,7 @@ function loadCustomData(newdata) {
   return custom
 }
 
+// wrap 
 function wrapData(data) { 
   // getter and scale
   data.getScales = function(range) {
@@ -59,7 +61,6 @@ function wrapData(data) {
     });
     return o
   }
-
   // brushing
   data.deactivatePoints = function() {
     data.values.forEach(function(v) {
@@ -72,7 +73,7 @@ function wrapData(data) {
     })
   }
   data.activatePoints()
-
+  // make colour scheme
   colour.scheme = d3.scale.category10(data.category)
   colour.point = function(d) {
     if (d._active) {
@@ -80,7 +81,7 @@ function wrapData(data) {
     }
     return colour.notbrushed
   }
-
+  // function to draw a legend in the given div
   colour.legend = function(div) {
     if (data.category) {
       var legend = d3.select(div).append('div').attr("id", "legend")
