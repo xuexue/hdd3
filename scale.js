@@ -10,6 +10,36 @@ colour.nav = function(d) {
   return d.active ? colour.active : colour.main
 }
 
+function loadCustomData(newdata) {
+  var custom = {}
+  console.log(newdata)
+  custom.values = d3.csv.parse(newdata)
+  // @TODO: check for null
+
+  custom.traits = []
+  for (var key in custom.values[0]) {
+    if (key === 'length' || !custom.values[0].hasOwnProperty(key)) {
+      continue;
+    }
+    if (key == 'category') {
+      custom.category = []
+    } else {
+      custom.traits.push(key);
+    }
+  }
+
+  if (custom.category) { //note [] evaluates to true
+    for (var i=0; i<custom.values.length; i++) {
+      var cat = custom.values[i].category
+      if (custom.category.indexOf(cat) == -1) {
+        custom.category.push(cat)
+      }
+    }
+  }
+  console.log(custom)
+  return custom
+}
+
 function wrapData(data) { 
   // getter and scale
   data.getScales = function(range) {

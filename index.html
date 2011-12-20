@@ -2,8 +2,11 @@
 <html>
   <head>
     <title>hdd3</title>
+    <script type="text/javascript" src="lib/jquery-1.6.js"></script>
+    <script type="text/javascript" src="lib/fancybox/jquery.fancybox-1.3.4.js"></script>
     <script type="text/javascript" src="lib/d3.js"></script>
-    <script type="text/javascript" src="lib/histogram.js"></script>
+    <script type="text/javascript" src="lib/d3.layout.js"></script>
+    <script type="text/javascript" src="lib/d3.csv.js"></script>
     <script type="text/javascript" src="data/iris.js"></script>
     <script type="text/javascript" src="randdata.js"></script>
     <script type="text/javascript" src="scale.js"></script>
@@ -15,6 +18,7 @@
     <script type="text/javascript" src="histograms.js"></script>
     <script type="text/javascript" src="scattermatrix.js"></script>
     <link rel="stylesheet" href="reset.css" type="text/css" />
+    <link rel="stylesheet" href="lib/fancybox/jquery.fancybox-1.3.4.css" type="text/css" />
     <link rel="stylesheet" href="menu.css" type="text/css" />
     <style type="text/css">
       #graphic {max-width:990px; float:left; padding:20px; }
@@ -43,7 +47,7 @@
           <li id="datairis" class="selected" onclick='javascript:useData("datairis")'>Iris</li>
           <li id="datarand" onclick='javascript:useData("datarand")'>Stress Test - Uniform Random</li>
           <!--li>Bivariate Normal</li-->
-          <li>Import</li>
+          <li id="custom"><a id="import" href="#fileupload">Import</a></li>
         </ul>
         <li>Chart Type</ li>
         <ul>
@@ -56,27 +60,71 @@
       </ul>
     </div>
 
+    <div style="display:none">
+      <div id="fileupload">
+        <p>Select a .csv format file with headers.</p>
+        <p><input type=file></p>
+      </div>
+    </div>
+
+
     <script type="text/javascript">
-      var dataSets = {'datairis':iris, 'datarand':random}
-      var charts = {'chartscatter':scattermatrix, 'chartnavgraph':navgraph, 'charthist':histograms}
+      // for controlling datasets
+      var dataSets = {'datairis':iris,
+                      'datarand':random,
+                      'custom':null}
+      var charts = {'chartscatter':scattermatrix,
+                    'chartnavgraph':navgraph,
+                    'charthist':histograms}
       document.data = 'datairis'
       document.chart = 'chartnavgraph'
+      function plot() {  charts[document.chart](dataSets[document.data]) }
       function useData(data) {
-        d3.select('#'+document.data).attr("class", "")
+        if (document.data) {
+          d3.select('#'+document.data).attr("class", "")
+        }
         d3.select('#'+data).attr("class", "selected")
         document.data = data
-        charts[document.chart](dataSets[document.data])
+        plot()
       }
       function useChart(chart) {
-        d3.select('#'+document.chart).attr("class", "")
+        if (document.chart) {
+          d3.select('#'+document.chart).attr("class", "")
+        }
         d3.select('#'+chart).attr("class", "selected")
         document.chart = chart
-        charts[document.chart](dataSets[document.data])
+        plot()
       }
-     useData('datairis')
-     //scattermatrix(iris)
-     ///histogram(dataSets[document.data])
-     //histograms(iris)//.setup(100, 100, 20, 'p.L').plot('#graphic')
+      useData('datairis')
+
+      // for fancy box
+      $("a#import").fancybox({ 'hideOnContentClick': false });
+
+      // for file upload
+      var has_filereader = true, upload = $('input')[0]
+      if (typeof window.FileReader === 'undefined') {
+        has_filereader = false;
+        $("#available").html("File API and File Reader are not available on " +
+            "your browser. Please use a recent version of Chrome, Firefox, or " +
+            "Safari. ")
+      }
+      upload.onchange = function (e) {
+        e.preventDefault();
+        var file = upload.files[0],
+            reader = new FileReader();
+        reader.onerror = function (e) {
+          $("#available").html("Upload failed.")
+        }
+        reader.onload = function (event) {
+          dataSets['custom'] = loadCustomData(event.target.result)
+          $("#fileupload").hide();
+          useData('custom')
+
+        }
+        reader.readAsText(file)
+        return false
+      };
+
     </script>
 
   </body>
