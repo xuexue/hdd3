@@ -12,7 +12,6 @@ colour.nav = function(d) {
 
 function loadCustomData(newdata) {
   var custom = {}
-  console.log(newdata)
   custom.values = d3.csv.parse(newdata)
   // @TODO: check for null
 
