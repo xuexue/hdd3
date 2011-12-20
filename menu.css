@@ -42,6 +42,9 @@ body {
   background: #DDD;
 }
 
+#aboutlink:hover {
+  background: #DDD;
+}
 #menu li ul {
   padding:0px;
   margin: 0px
@@ -60,6 +63,17 @@ body {
 }
 #menu li ul li.selected {
   background: #CCC;
+}
+
+#info{
+  width:400px;
+  padding:15px;
+  text-align:left;
+}
+#info h3 {
+  font-weight:bold;
+  font-size:16px;
+  padding-bottom:10px;
 }
 
 #fileupload {

@@ -41,7 +41,7 @@
 
     <div id="menu">
       <ul>
-        <li>About</ li>
+        <li id="aboutlink"><a id="about" href="#info">About</a></ li>
         <li>Dataset</ li>
         <ul>
           <li id="datairis" class="selected" onclick='javascript:useData("datairis")'>Iris</li>
@@ -49,15 +49,29 @@
           <!--li>Bivariate Normal</li-->
           <li id="custom"><a id="import" href="#fileupload">Import</a></li>
         </ul>
-        <li>Chart Type</ li>
+        <li>Graphic Type</ li>
         <ul>
           <li id="charthist" onclick='javascript:useChart("charthist")'>Histograms</ li>
           <li id="chartscatter" onclick='javascript:useChart("chartscatter")'>Scatter Plots</ li>
           <li id="chartnavgraph" class="selected" onclick='javascript:useChart("chartnavgraph")'>Navigation Graph</ li>
         </ul>
-        <li><a href="http://mbostock.github.com/d3/" target="_blank" />d3.js Website</a></ li>
+        <li><a href="http://mbostock.github.com/d3/" target="_blank" />d3.js website</a></ li>
         <li><a href="https://github.com/xuexue/hdd3" target="_blank" />Github</a></ li>
       </ul>
+    </div>
+
+
+    <div style="display:none">
+      <div id="info">
+      <h3>This is a visualization of high-dimensional data.</h3>
+      The "histograms" graphic shows one-dimesional summaries of each
+      dimension. The "scatter plots" graphic shows two-dimensions of the
+      data at a time, to explore correlation between variables. The
+      "navigation graph" graphic has a graph on the uppler left corner that
+      controls which pairs of axes the data is projected on. Click on any
+      dark blue nodes or edges to rotate the data.
+
+      </div>
     </div>
 
     <div style="display:none">
@@ -114,6 +128,7 @@
 
       // for fancy box
       $("a#import").fancybox({ 'hideOnContentClick': false });
+      $("a#about").fancybox({ 'hideOnContentClick': true});
 
       // for file upload
       var has_filereader = true, upload = $('input')[0]
