@@ -27,7 +27,7 @@ function histogram(data) {
     // calculate the approximate magnitudes of data, used for rounding
     var min = this.useddata[0],
         max = this.useddata[this.useddata.length-1];
-    var pow = -Math.ceil(Math.log(max-min)/Math.log(10)-2)
+    var pow = -Math.floor(Math.log(max-min)/Math.log(10) -1)
     function round(x) { return d3.round(x, pow).toFixed(pow) }
     // ROUNDED and presentable summary data
     this.summary = {
