@@ -62,8 +62,23 @@
 
     <div style="display:none">
       <div id="fileupload">
-        <p>Select a .csv format file with headers.</p>
-        <p><input type=file></p>
+        Select a .csv format file with headers, with all numeric typed 
+        data with at most one categorically typed variable called "category"
+        <br/> <br/>
+        <input type=file />
+        <br /><br />
+        Example:<br />
+        <pre>
+"category","t1","t2","t3","t4"
+"simple",72,34,106,1224
+"simple",84,43,127,1806
+"simple",88,36,124,1584
+"difficult",46,34,80,782
+"difficult",54,44,98,1188
+"difficult",61,34,95,1037
+"simple",91,43,134,1956.5
+"simple",88,34,122,1496
+        </pre>
       </div>
     </div>
 
@@ -104,7 +119,7 @@
       var has_filereader = true, upload = $('input')[0]
       if (typeof window.FileReader === 'undefined') {
         has_filereader = false;
-        $("#available").html("File API and File Reader are not available on " +
+        $("#fileupload").html("File API and File Reader are not available on " +
             "your browser. Please use a recent version of Chrome, Firefox, or " +
             "Safari. ")
       }
@@ -113,13 +128,12 @@
         var file = upload.files[0],
             reader = new FileReader();
         reader.onerror = function (e) {
-          $("#available").html("Upload failed.")
+          $("#fileupload").html("Upload failed.")
         }
         reader.onload = function (event) {
           dataSets['custom'] = loadCustomData(event.target.result)
-          $("#fileupload").hide();
-          useData('custom')
-
+          $("#fileupload").html("Success!")
+          useData('custom');
         }
         reader.readAsText(file)
         return false

@@ -27,8 +27,8 @@ function loadCustomData(newdata) {
       custom.traits.push(key);
     }
   }
-
-  if (custom.category) { //note [] evaluates to true
+  // make an exhaustive list of possible "category" values
+  if (custom.category) { //note [] evaluates to true in javascript =s
     for (var i=0; i<custom.values.length; i++) {
       var cat = custom.values[i].category
       if (custom.category.indexOf(cat) == -1) {
@@ -36,7 +36,12 @@ function loadCustomData(newdata) {
       }
     }
   }
-  console.log(custom)
+  // parse to integer
+  custom.values.forEach(function(d) {
+    custom.traits.forEach(function(t) {
+      d[t] = parseFloat(d[t])
+    })
+  })
   return custom
 }
 
