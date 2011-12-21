@@ -101,7 +101,7 @@ function nav(data, parent) {
     parent.scatter.position(initialNode.traits[0], initialNode.traits[1], 0.5)
 
     // position the non-moving elements: nodes edges and labels
-    var edges = plot.selectAll("line.link")
+    this.edges = plot.selectAll("line.link")
           .data(this.graph.edges)
         .enter().append("line")
           .attr("class", "link")
@@ -118,7 +118,7 @@ function nav(data, parent) {
             } return "link"
           });
 
-    var nodes = plot.selectAll("circle.node")
+    this.nodes = plot.selectAll("circle.node")
           .data(this.graph.nodes)
         .enter().append("circle")
           .attr("class", "node")
@@ -144,7 +144,7 @@ function nav(data, parent) {
           .attr("text-anchor", "middle")
 
     // position the selector
-    var selector = plot.selectAll("selectornode")
+    selector = plot.selectAll("selectornode")
           .data([1])
         .enter().append("circle")
           .attr("class", "selector")
@@ -158,7 +158,7 @@ function nav(data, parent) {
     selector.selectedEdge = null
 
     // movement to another (active) node
-    nodes.on("click", function(node) { 
+    this.nodes.on("click", function(node) { 
       if (node.active) {
         selector.selected = node
         // reset active elements 
@@ -181,7 +181,7 @@ function nav(data, parent) {
     });
 
     // movement to the middle of an edge (requires interpolation)
-    edges.on("mousedown", function(edge) {
+    this.edges.on("mousedown", function(edge) {
       if (edge.active) {
         var x, y
         if (d3.event.offsetX) {
@@ -213,26 +213,26 @@ function nav(data, parent) {
         nav.replot(x, y, transition)
       }
     });
+    this.selector = selector
     return nav
   }
 
   // function to replot nodes & edges
   nav.replot = function(selectorX, selectorY, transition) {
-    plot.selectAll("line.link") // recolour edges
-       .style("stroke", colour.nav)
+    this.edges.style("stroke", colour.nav)
        .attr("class", function(d) {
          if (d.active) {
            return "link active";
          } return "link"
        })
-    plot.selectAll("circle.node") // recolour nods
+    this.nodes.selectAll("circle.node") // recolour nods
        .style("fill", colour.nav)
        .attr("class", function(d) {
          if (d.active) { 
            return "node active";
          } return "node"
        })
-    selector.transition() // move the selector
+    this.selector.transition() // move the selector
             .ease("linear")
             .duration(1000 * transition)
             .attr("cx", selectorX)
