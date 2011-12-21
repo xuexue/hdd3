@@ -69,7 +69,7 @@ function nav(data, parent) {
 
   nav.plot = function(mainDiv) {
     // set up the canvas
-    var plot = d3.select(mainDiv)
+    var chart = d3.select(mainDiv)
         .append("svg")
         .attr("width", this.width + 2*this.padding)
         .attr("height", this.height + 2*this.padding);
@@ -101,7 +101,7 @@ function nav(data, parent) {
     parent.scatter.position(initialNode.traits[0], initialNode.traits[1], 0.5)
 
     // position the non-moving elements: nodes edges and labels
-    this.edges = plot.selectAll("line.link")
+    this.edges = chart.selectAll("line.link")
           .data(this.graph.edges)
         .enter().append("line")
           .attr("class", "link")
@@ -118,7 +118,7 @@ function nav(data, parent) {
             } return "link"
           });
 
-    this.nodes = plot.selectAll("circle.node")
+    this.nodes = chart.selectAll("circle.node")
           .data(this.graph.nodes)
         .enter().append("circle")
           .attr("class", "node")
@@ -133,7 +133,7 @@ function nav(data, parent) {
             } return "node"
           });
 
-    var labels = plot.selectAll("labeltext")
+    var labels = chart.selectAll("labeltext")
           .data(this.graph.nodes)
         .enter().append("text")
           .attr("class", "text")
@@ -144,7 +144,7 @@ function nav(data, parent) {
           .attr("text-anchor", "middle")
 
     // position the selector
-    selector = plot.selectAll("selectornode")
+    selector = chart.selectAll("selectornode")
           .data([1])
         .enter().append("circle")
           .attr("class", "selector")
@@ -188,8 +188,9 @@ function nav(data, parent) {
           x = d3.event.offsetX-nav.padding
           y = d3.event.offsetY-nav.padding
         } else {
-          x = d3.event.layerX-nav.padding-7
-          y = d3.event.layerY-nav.padding-10
+          //This is a hack!!
+          x = d3.event.layerX-nav.padding-20
+          y = d3.event.layerY-nav.padding-70
         }
         selector.selectedEdge = edge
         // reset active elements
@@ -214,18 +215,20 @@ function nav(data, parent) {
       }
     });
     this.selector = selector
+    this.chart = chart
     return nav
   }
 
   // function to replot nodes & edges
   nav.replot = function(selectorX, selectorY, transition) {
-    this.edges.style("stroke", colour.nav)
+    this.chart.selectAll("line.link")
+       .style("stroke", colour.nav)
        .attr("class", function(d) {
          if (d.active) {
            return "link active";
          } return "link"
        })
-    this.nodes.selectAll("circle.node") // recolour nods
+    this.chart.selectAll("circle.node") // recolour nods
        .style("fill", colour.nav)
        .attr("class", function(d) {
          if (d.active) { 
