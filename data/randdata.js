@@ -13,7 +13,11 @@ function randpoint() {
     f:Math.random()*4,
   }
 }
-var random = {
-  'traits': ['x', 'y', 'z', 't', 'a', 'b', 'c', 'd', 'e', 'f'],
-  'values' : d3.range(500).map(randpoint)
-};
+
+random = {}
+function getRandom() {
+  return {
+    'traits': ['x', 'y', 'z', 't', 'a', 'b', 'c', 'd', 'e', 'f'],
+    'values' : d3.range(500).map(randpoint)
+  };
+}

@@ -111,7 +111,12 @@
                     'charthist':histograms}
       document.data = 'datairis'
       document.chart = 'chartnavgraph'
-      function plot() {  charts[document.chart](dataSets[document.data]) }
+      function plot() {
+        if (document.data  == 'datarand') {
+          dataSets.datarand = getRandom()
+        }
+        charts[document.chart](dataSets[document.data])
+      }
       function useData(data) {
         if (document.data) {
           d3.select('#'+document.data).attr("class", "")
